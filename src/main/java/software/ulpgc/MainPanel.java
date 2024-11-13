@@ -11,21 +11,15 @@ public class MainPanel {
 
     public MainPanel() {
         mainPanel.setLayout(new BorderLayout());
-        initialSelector();
+        selectDifficulty();
     }
 
-    private void initialSelector() {
+    private void selectDifficulty() {
         JComboBox<String> difficultySelector = new JComboBox<>();
-
-        difficultySelector.setPreferredSize(new Dimension(150, 50));
-        difficultySelector.setFont(new Font("Comics Sans", Font.PLAIN, 20));
-
-
-        difficultySelector.addItem("Easy");
-        difficultySelector.addItem("Intermediate");
-        difficultySelector.addItem("Expert"); // TODO Lista de dificultades
-
-        JPanel comboBoxPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        addDifficulties(difficultySelector);
+        personalizeAspect(difficultySelector);
+        JPanel comboBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        comboBoxPanel.setBackground(new Color(20, 145,66));
         comboBoxPanel.add(difficultySelector);
 
         difficultySelector.addActionListener(e -> {
@@ -34,21 +28,34 @@ public class MainPanel {
         mainPanel.add(comboBoxPanel, BorderLayout.NORTH);
     }
 
+    private static void personalizeAspect(JComboBox<String> difficultySelector) {
+        difficultySelector.setPreferredSize(new Dimension(130, 50));
+        difficultySelector.setFont(new Font("Comics Sans", Font.PLAIN, 16));
+        difficultySelector.setBackground(new Color(178,186,181));
+    }
+
+
+    private static void addDifficulties(JComboBox<String> difficultySelector) {
+        difficultySelector.addItem("Easy");
+        difficultySelector.addItem("Intermediate");
+        difficultySelector.addItem("Expert"); // TODO Lista de dificultades
+    }
+
     private void changeDifficulty(JComboBox<String> difficultySelector) {
         if (gameplayPanel != null) mainPanel.remove(gameplayPanel);
         if (Objects.equals(difficultySelector.getSelectedItem(), "Easy")){
-            configurateGameplayPanel(9, 9);
+            configureGameplayPanel(9, 9);
         } else if (Objects.equals(difficultySelector.getSelectedItem(), "Intermediate")){
-            configurateGameplayPanel(16, 16);
+            configureGameplayPanel(16, 16);
         } else if (Objects.equals(difficultySelector.getSelectedItem(), "Expert")){
-            configurateGameplayPanel(16, 30);
+            configureGameplayPanel(16, 30);
         }
         mainPanel.add(gameplayPanel, BorderLayout.CENTER);
         mainPanel.revalidate();
         mainPanel.repaint();
     }
 
-    private void configurateGameplayPanel(int i, int j) {
+    private void configureGameplayPanel(int i, int j) {
         gameplayPanel = new GameplayPanel(i, j);
         gameplayPanel.setPreferredSize(new Dimension(i*10, j*10));
     }
