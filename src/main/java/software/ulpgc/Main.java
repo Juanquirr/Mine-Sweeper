@@ -1,15 +1,12 @@
 package software.ulpgc;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class Main {
     public static void main(String[] args) {
-        MineBoard mineBoard = new MineBoard();
-        StartButton startButton = new StartButton();
-        mineBoard.add(StartButton.initialToggle());
-        mineBoard.add(StartButton.createBoard());
+        MineSweeperFrame mineSweeperFrame = new MineSweeperFrame();
+        MainPanel mainPanel = new MainPanel();
+        mineSweeperFrame.add(mainPanel.getPanel());
+        mineSweeperFrame.revalidate();
+        mineSweeperFrame.repaint();
+        mainPanel.getPanel().setVisible(true);
     }
-
-
 }
