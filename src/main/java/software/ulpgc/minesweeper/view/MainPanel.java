@@ -1,5 +1,5 @@
 // MainPanel.java
-package software.ulpgc;
+package software.ulpgc.minesweeper.view;
 
 import javax.swing.*;
 import java.awt.*;

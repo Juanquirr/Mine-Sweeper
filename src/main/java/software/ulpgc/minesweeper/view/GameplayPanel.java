@@ -1,4 +1,4 @@
-package software.ulpgc;
+package software.ulpgc.minesweeper.view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +22,7 @@ public class GameplayPanel extends JPanel {
         JButton button = new JButton("");
         button.addActionListener(e -> {
             button.setText("X");
+            button.setEnabled(false);
         });
         button.setBackground(isGreen ? new Color(0, 255, 0) : new Color(153, 255, 153));
         return button;
