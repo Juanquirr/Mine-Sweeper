@@ -7,10 +7,13 @@ public class MainFrame extends JFrame {
     public MainFrame() throws HeadlessException {
         setTitle("Minesweeper");
         setResizable(false);
+        setLayout(new BorderLayout());
         setSize(700, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
+        add(loadingPanel());
     }
 
-
+    private Component loadingPanel() {
+        return new SwingLoadingPanel();
+    }
 }

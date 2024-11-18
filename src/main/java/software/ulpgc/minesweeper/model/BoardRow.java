@@ -5,7 +5,7 @@ import java.util.List;
 
 public class BoardRow {
     private final int size;
-    private final List<Tale> rowData;
+    private final List<Cell> rowData;
 
     private BoardRow(int rowLength) {
         this.size = rowLength;
@@ -16,10 +16,10 @@ public class BoardRow {
         return new BoardRow(size);
     }
 
-    private List<Tale> createRow() {
-        List<Tale> row = new ArrayList<>();
+    private List<Cell> createRow() {
+        List<Cell> row = new ArrayList<>();
         for (int j = 0; j < size; j++) {
-            row.add(new Tale());
+            row.add(new Cell());
         }
         return row;
     }
@@ -28,7 +28,7 @@ public class BoardRow {
         return size;
     }
 
-    public List<Tale> rowData() {
+    public List<Cell> rowData() {
         return rowData;
     }
 

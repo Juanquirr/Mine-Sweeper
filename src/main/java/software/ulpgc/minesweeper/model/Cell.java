@@ -1,9 +1,9 @@
 package software.ulpgc.minesweeper.model;
 
-public class Tale {
-    private final Tale.TaleSate state;
+public class Cell {
+    private final Cell.TaleSate state;
 
-    public Tale() {
+    public Cell() {
         this.state = TaleSate.NonSelected;
     }
 
@@ -17,7 +17,7 @@ public class Tale {
 
     @Override
     public String toString() {
-        return "Tale{" +
+        return "Cell{" +
                 "state=" + state +
                 '}';
     }
