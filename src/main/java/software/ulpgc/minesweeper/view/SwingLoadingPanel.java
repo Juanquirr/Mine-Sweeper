@@ -12,7 +12,7 @@ public class SwingLoadingPanel extends JPanel {
     private JButton hardButton;
 
     public SwingLoadingPanel() {
-        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.BLACK);
 
         try {
@@ -21,33 +21,35 @@ public class SwingLoadingPanel extends JPanel {
             throw new RuntimeException("Failed to load font", e);
         }
 
-        createButtons();
-        add(displayTitle(), BorderLayout.NORTH);
-        add(createButtonPanel(), BorderLayout.CENTER);
+        add(displayTitle());
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(createDifficultySelectionPanel());
+        add(Box.createRigidArea(new Dimension(0, 100)));
+        add(toolbar());
     }
 
-    private JLabel displayTitle() {
+    private Component toolbar() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(createStartButton());
+        return panel;
+    }
+
+    private Component createStartButton() {
+        JButton button = new JButton("START");
+        button.addActionListener(e -> System.out.println("START!"));
+        button.setMaximumSize(new Dimension(800, 50)); // Ancho máximo razonable
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return button;
+    }
+
+    private Component displayTitle() {
         JLabel label = new JLabel("MINESWEEPER", SwingConstants.CENTER);
         label.setForeground(Color.WHITE);
-        label.setPreferredSize(new Dimension(700, 300));
+        label.setMaximumSize(new Dimension(800, 200));
         label.setFont(customFont.deriveFont(40f));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar en BoxLayout
         return label;
-    }
-
-    private void createButtons() {
-        easyButton = customizeButton("EASY");
-        mediumButton = customizeButton("MEDIUM");
-        hardButton = customizeButton("HARD");
-
-        ButtonGroup buttonGroup = new ButtonGroup();
-        buttonGroup.add(easyButton);
-        buttonGroup.add(mediumButton);
-        buttonGroup.add(hardButton);
-
-
-        easyButton.addActionListener(e -> updateButtonStyles(easyButton));
-        mediumButton.addActionListener(e -> updateButtonStyles(mediumButton));
-        hardButton.addActionListener(e -> updateButtonStyles(hardButton));
     }
 
     private JButton customizeButton(String text) {
@@ -62,27 +64,7 @@ public class SwingLoadingPanel extends JPanel {
         return button;
     }
 
-    private void updateButtonStyles(JButton selectedButton) {
-        for (JButton button : new JButton[]{easyButton, mediumButton, hardButton}) {
-            button.setBackground(new Color(65, 61, 111));
-            button.setFont(customFont.deriveFont(30f));
-            button.setForeground(Color.WHITE);
-        }
-        selectedButton.setBackground(new Color(255, 223, 0));
-        selectedButton.setFont(customFont.deriveFont(Font.BOLD, 35f));
-    }
-
-    private JPanel createButtonPanel() {
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        buttonPanel.setOpaque(false);
-
-        buttonPanel.add(easyButton);
-        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonPanel.add(mediumButton);
-        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonPanel.add(hardButton);
-
-        return buttonPanel;
+    private JPanel createDifficultySelectionPanel() {
+        return new SwingDifficultyDialog();
     }
 }

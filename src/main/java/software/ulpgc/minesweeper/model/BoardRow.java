@@ -39,4 +39,8 @@ public class BoardRow {
                 ", rowData=" + rowData +
                 '}';
     }
+
+    public void setBomb(int y) {
+        rowData.get(y).setBomb();
+    }
 }

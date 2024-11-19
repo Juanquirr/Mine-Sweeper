@@ -1,7 +1,7 @@
 package software.ulpgc.minesweeper.model;
 
 public class Cell {
-    private final Cell.TaleSate state;
+    private Cell.TaleSate state;
 
     public Cell() {
         this.state = TaleSate.NonSelected;
@@ -11,8 +11,12 @@ public class Cell {
         return state;
     }
 
+    public void setBomb() {
+        state = TaleSate.HasBomb;
+    }
+
     public enum TaleSate {
-        NonSelected, Selected
+        NonSelected, Selected, HasBomb
     }
 
     @Override
