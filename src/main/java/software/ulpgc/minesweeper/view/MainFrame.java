@@ -8,7 +8,7 @@ public class MainFrame extends JFrame {
         setTitle("Minesweeper");
         setResizable(false);
         setLayout(new BorderLayout());
-        setSize(700, 600);
+        setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         add(loadingPanel());
     }
