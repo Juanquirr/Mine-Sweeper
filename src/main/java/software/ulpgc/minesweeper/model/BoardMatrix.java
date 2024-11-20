@@ -18,25 +18,26 @@ public class BoardMatrix implements Iterable<BoardRow> {
         this.width = width;
         this.difficulty = difficulty;
         this.bombsCounter = difficulty.getBombsCounter();
-        this.matrix = initializeMatrix();
         this.positions = initializeBombCells();
+        this.matrix = initializeMatrix();
     }
 
     private Set<Position> initializeBombCells() {
         Set<Position> positions = new HashSet<>();
         Random random = new Random();
-        while (positions.size() != bombsCounter)
+        while (positions.size() < bombsCounter)
             positions.add(
                     new Position(
                             random.nextInt(width),
                             random.nextInt(height)
                     )
             );
+
         return positions;
     }
 
     public static BoardMatrix ofSize(int height, int width, Difficulty difficulty) {
-        return new BoardMatrix(height, width,difficulty);
+        return new BoardMatrix(height, width, difficulty);
     }
 
     private List<BoardRow> initializeMatrix() {
@@ -49,8 +50,8 @@ public class BoardMatrix implements Iterable<BoardRow> {
 
     private List<BoardRow> defineBombs(List<BoardRow> matrix) {
         for (Position position : positions) {
-            BoardRow row = matrix.get(position.x());
-            row.setBomb(position.y());
+            BoardRow row = matrix.get(position.y());
+            row.setBomb(position.x());
         }
         return matrix;
     }

@@ -1,9 +1,9 @@
 package software.ulpgc.minesweeper.view;
 
 public enum Difficulty {
-    EASY(4),
-    MEDIUM(6),
-    HARD(8),
+    EASY(10),
+    MEDIUM(40),
+    HARD(99),
     EXPERT(0);
 
     private int bombsCounter;

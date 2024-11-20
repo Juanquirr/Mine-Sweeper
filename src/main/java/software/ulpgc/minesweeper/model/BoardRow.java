@@ -40,7 +40,7 @@ public class BoardRow {
                 '}';
     }
 
-    public void setBomb(int y) {
-        rowData.get(y).setBomb();
+    public void setBomb(int x) {
+        rowData.get(x).setBomb();
     }
 }
