@@ -36,7 +36,7 @@ public class Cell {
     public String toString() {
         return "Cell{" +
                 "state=" + cellState +
-                "type=" + cellType +
+                ", type=" + cellType +
                 '}';
     }
 }
