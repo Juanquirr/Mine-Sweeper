@@ -3,7 +3,6 @@ package software.ulpgc.minesweeper.architecture.control;
 import software.ulpgc.minesweeper.architecture.model.BoardMatrix;
 import software.ulpgc.minesweeper.architecture.view.GameplayPanel;
 import software.ulpgc.minesweeper.architecture.view.LoadingPanel;
-import software.ulpgc.minesweeper.architecture.view.SwingLoadingPanel;
 
 public class StartCommand implements Command {
     private final LoadingPanel loadingPanel;

@@ -17,7 +17,8 @@ public class BoardMatrix implements Iterable<BoardRow> {
         this.difficulty = difficulty;
         this.bombsCounter = difficulty.getBombsCounter();
         this.positions = initializeBombCells();
-        this.matrix = initializeMatrix();
+        this.matrix = defineBombs(initializeMatrix());
+
     }
 
     private Set<Position> initializeBombCells() {
@@ -42,15 +43,32 @@ public class BoardMatrix implements Iterable<BoardRow> {
         for (int i = 0; i < height; i++) {
             matrix.add(BoardRow.ofSize(width));
         }
-        return defineBombs(matrix);
+        return matrix;
     }
 
     private List<BoardRow> defineBombs(List<BoardRow> matrix) {
         for (Position position : positions) {
-            BoardRow row = matrix.get(position.y());
-            row.setBomb(position.x());
+            BoardRow row = matrix.get(position.x());
+            row.setBomb(position.y());
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
+                    int xi = position.x() + i;
+                    int yj = position.y() + j;
+
+                    if (xi < 0) continue;
+                    if (yj < 0) continue;
+                    if (yj >= row.rowData().size()) continue;
+                    if (xi >= this.height) continue;
+                    matrix.get(xi).get(yj).addNearBomb();
+                    // TODO re-factor
+                }
+            }
         }
         return matrix;
+    }
+
+    public BoardRow get(int y) {
+        return matrix.get(y);
     }
 
     public int height() {

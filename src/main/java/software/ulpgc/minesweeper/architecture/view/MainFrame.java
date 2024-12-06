@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
         getContentPane().setLayout(layout);
         setSize(1000, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         add(this.gameplayPanel = createGameplayPanel(), "GAME");
         add(this.loadingPanel = createLoadingPanel(), "LOADING");
         layout.show(getContentPane(), "GAME");
@@ -28,13 +29,13 @@ public class MainFrame extends JFrame {
 
     private SwingGameplayPanel createGameplayPanel() {
         SwingGameplayPanel gameplayPanel = new SwingGameplayPanel();
-        gameplayPanel.finishButton().addActionListener(e -> commands.get("finish").execute());
+        gameplayPanel.finishButton().addActionListener(_ -> commands.get("finish").execute());
         return gameplayPanel;
     }
 
     private SwingLoadingPanel createLoadingPanel() {
         SwingLoadingPanel loadingPanel = new SwingLoadingPanel();
-        loadingPanel.startButton().addActionListener(e -> commands.get("start_game").execute());
+        loadingPanel.startButton().addActionListener(_ -> commands.get("start_game").execute());
         return loadingPanel;
     }
 

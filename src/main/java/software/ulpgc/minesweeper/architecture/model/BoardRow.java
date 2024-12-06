@@ -33,12 +33,8 @@ public class BoardRow implements Iterable<Cell> {
         return rowData;
     }
 
-    @Override
-    public String toString() {
-        return "BoardRow{" +
-                "size=" + size +
-                ", rowData=" + rowData +
-                '}';
+    public Cell get(int col) {
+        return rowData.get(col);
     }
 
     public void setBomb(int x) {
@@ -48,5 +44,13 @@ public class BoardRow implements Iterable<Cell> {
     @Override
     public Iterator<Cell> iterator() {
         return rowData.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return "BoardRow{" +
+                "size=" + size +
+                ", rowData=" + rowData +
+                '}';
     }
 }

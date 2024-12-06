@@ -1,9 +1,9 @@
 package software.ulpgc.minesweeper.architecture.model;
 
 public enum Difficulty {
-    EASY(5, 5, 2),
-    MEDIUM(10, 10, 4),
-    HARD(20, 20, 8),
+    EASY(5, 5, 4),
+    MEDIUM(10, 10, 8),
+    HARD(20, 20, 16),
     EXPERT(0, 0, 0);
 
     private int height;
