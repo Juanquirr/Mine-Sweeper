@@ -1,15 +1,14 @@
-package software.ulpgc.minesweeper.view;
+package software.ulpgc.minesweeper.architecture.view;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-public class SwingLoadingPanel extends JPanel {
+public class SwingLoadingPanel extends JPanel implements LoadingPanel {
 
     private final Font customFont;
-    private JButton easyButton;
-    private JButton mediumButton;
-    private JButton hardButton;
+    private final JButton startButton;
+    private final SwingDifficultyDialog difficultyDialog;
 
     public SwingLoadingPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -22,23 +21,22 @@ public class SwingLoadingPanel extends JPanel {
         }
 
         add(displayTitle());
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(createDifficultySelectionPanel());
-        add(Box.createRigidArea(new Dimension(0, 100)));
-        add(toolbar());
+        add(Box.createVerticalStrut(10));
+        add(this.difficultyDialog = createDifficultyDialog());
+        add(Box.createVerticalStrut(100));
+        add(toolbar(this.startButton = createStartButton()));
     }
 
-    private Component toolbar() {
+    private JPanel toolbar(JButton button) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(createStartButton());
+        panel.add(button);
         return panel;
     }
 
-    private Component createStartButton() {
+    private JButton createStartButton() {
         JButton button = new JButton("START");
-        button.addActionListener(e -> System.out.println("START!"));
-        button.setMaximumSize(new Dimension(800, 50)); // Ancho máximo razonable
+        button.setMaximumSize(new Dimension(800, 50));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         return button;
     }
@@ -64,7 +62,27 @@ public class SwingLoadingPanel extends JPanel {
         return button;
     }
 
-    private JPanel createDifficultySelectionPanel() {
+    private SwingDifficultyDialog createDifficultyDialog() {
         return new SwingDifficultyDialog();
+    }
+
+    public JButton startButton() {
+        return startButton;
+    }
+
+    public SwingDifficultyDialog difficultyDialog() {
+        return difficultyDialog;
+    }
+
+    @Override
+    public LoadingPanel showPanel() {
+        setVisible(true);
+        return this;
+    }
+
+    @Override
+    public LoadingPanel hidePanel() {
+        setVisible(false);
+        return this;
     }
 }

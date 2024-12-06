@@ -1,16 +1,14 @@
-package software.ulpgc.minesweeper.view;
+package software.ulpgc.minesweeper.architecture.view.customization;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomizedButton extends JButton {
+public class CustomizedButton extends JToggleButton {
     private final Font customFont;
 
     public CustomizedButton(String text) {
@@ -29,6 +27,7 @@ public class CustomizedButton extends JButton {
         }
 
         setText(text);
+        setActionCommand(text);
         setFont(customFont.deriveFont(30f));
         setForeground(Color.WHITE);
         setBackground(Color.DARK_GRAY);
@@ -36,7 +35,6 @@ public class CustomizedButton extends JButton {
         setBorderPainted(false);
         setOpaque(true);
         setAlignmentX(Component.CENTER_ALIGNMENT);
-        setActionCommand("update_selection");
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

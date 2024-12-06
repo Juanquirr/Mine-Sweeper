@@ -1,9 +1,10 @@
-package software.ulpgc.minesweeper.model;
+package software.ulpgc.minesweeper.architecture.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class BoardRow {
+public class BoardRow implements Iterable<Cell> {
     private final int size;
     private final List<Cell> rowData;
 
@@ -41,6 +42,11 @@ public class BoardRow {
     }
 
     public void setBomb(int x) {
-        rowData.get(x).setBomb();
+        rowData.set(x, new Cell(Cell.CellState.NonSelected, Cell.CellType.Bomb));
+    }
+
+    @Override
+    public Iterator<Cell> iterator() {
+        return rowData.iterator();
     }
 }

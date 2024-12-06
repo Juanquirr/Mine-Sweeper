@@ -1,4 +1,8 @@
-package software.ulpgc.minesweeper.view;
+package software.ulpgc.minesweeper.architecture.view;
+
+import software.ulpgc.minesweeper.architecture.model.Difficulty;
+import software.ulpgc.minesweeper.architecture.view.customization.ButtonStyler;
+import software.ulpgc.minesweeper.architecture.view.customization.CustomizedButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,18 +13,18 @@ public class SwingDifficultyDialog extends JPanel implements DifficultyDialog {
     public SwingDifficultyDialog() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.darkGray);
-        group = new ButtonGroup();
-        for (JButton button : createButtons()) {
+        this.group = new ButtonGroup();
+        for (JToggleButton button : createButtons()) {
             add(button);
             button.addActionListener(e -> updateButtonStyles(button));
             group.add(button);
         }
     }
 
-    private JButton[] createButtons() {
+    private JToggleButton[] createButtons() {
         CustomizedButton easyButton = new CustomizedButton("EASY");
         ButtonStyler.applySelectedButtonStyle(easyButton);
-        return new JButton[]{
+        return new JToggleButton[]{
                 easyButton,
                 new CustomizedButton("MEDIUM"),
                 new CustomizedButton("HARD"),
@@ -28,7 +32,7 @@ public class SwingDifficultyDialog extends JPanel implements DifficultyDialog {
         };
     }
 
-    private void updateButtonStyles(JButton selectedButton) {
+    private void updateButtonStyles(JToggleButton selectedButton) {
         Font customFont = selectedButton.getFont();
         for (Component component : getComponents()) {
             if (component.equals(selectedButton)) {
@@ -41,7 +45,8 @@ public class SwingDifficultyDialog extends JPanel implements DifficultyDialog {
     }
 
     @Override
-    public Difficulty getSelection() {
-        return Difficulty.valueOf(((JButton) group.getSelection()).getText());
+    public Difficulty get() {
+        System.out.println(Difficulty.valueOf(group.getSelection().getActionCommand()));
+        return Difficulty.valueOf(group.getSelection().getActionCommand());
     }
 }

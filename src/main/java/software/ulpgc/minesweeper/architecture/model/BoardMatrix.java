@@ -1,6 +1,4 @@
-package software.ulpgc.minesweeper.model;
-
-import software.ulpgc.minesweeper.view.Difficulty;
+package software.ulpgc.minesweeper.architecture.model;
 
 import java.util.*;
 import java.util.List;
@@ -13,9 +11,9 @@ public class BoardMatrix implements Iterable<BoardRow> {
     private final int bombsCounter;
     private final Set<Position> positions;
 
-    private BoardMatrix(int height, int width, Difficulty difficulty) {
-        this.height = height;
-        this.width = width;
+    private BoardMatrix(Difficulty difficulty) {
+        this.height = difficulty.height();
+        this.width = difficulty.width();
         this.difficulty = difficulty;
         this.bombsCounter = difficulty.getBombsCounter();
         this.positions = initializeBombCells();
@@ -32,12 +30,11 @@ public class BoardMatrix implements Iterable<BoardRow> {
                             random.nextInt(height)
                     )
             );
-
         return positions;
     }
 
-    public static BoardMatrix ofSize(int height, int width, Difficulty difficulty) {
-        return new BoardMatrix(height, width, difficulty);
+    public static BoardMatrix ofSize(Difficulty difficulty) {
+        return new BoardMatrix(difficulty);
     }
 
     private List<BoardRow> initializeMatrix() {
@@ -62,6 +59,10 @@ public class BoardMatrix implements Iterable<BoardRow> {
 
     public int width() {
         return width;
+    }
+
+    public Difficulty difficulty() {
+        return difficulty;
     }
 
     @Override
