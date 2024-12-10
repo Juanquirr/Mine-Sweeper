@@ -1,6 +1,6 @@
 package software.ulpgc.minesweeper.architecture.control;
 
-import software.ulpgc.minesweeper.architecture.model.BoardMatrix;
+import software.ulpgc.minesweeper.architecture.model.Board;
 import software.ulpgc.minesweeper.architecture.view.GameplayPanel;
 import software.ulpgc.minesweeper.architecture.view.LoadingPanel;
 
@@ -16,7 +16,7 @@ public class StartCommand implements Command {
     @Override
     public void execute() {
         loadingPanel.hidePanel();
-        gameplayPanel.setBoard(BoardMatrix.ofSize(loadingPanel.difficultyDialog().get()));
+        gameplayPanel.setBoard(Board.ofDifficulty(loadingPanel.difficultyDialog().get()));
         gameplayPanel.showPanel();
     }
 }

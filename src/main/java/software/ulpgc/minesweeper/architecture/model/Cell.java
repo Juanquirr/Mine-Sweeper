@@ -1,53 +1,42 @@
 package software.ulpgc.minesweeper.architecture.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Cell {
     private final Cell.CellState cellState;
-    private final Cell.CellType cellType;
-    private int nearBombs;
+    private final Position position;
+    private final Set<Cell> neighbors;
 
-    public Cell() {
+    public Cell(Position position) {
         this.cellState = CellState.NonSelected;
-        this.cellType = CellType.NotBomb;
-        nearBombs = 0;
+        this.position = position;
+        this.neighbors = new HashSet<>();
     }
 
-    public Cell(CellState cellState, CellType cellType) {
-        this.cellState = cellState;
-        this.cellType = cellType;
-        this.nearBombs = -1;
+    public Cell addNeighbor(Cell cell) {
+        neighbors.add(cell);
+        return this;
     }
 
-    public CellState getCellState() {
+    public CellState cellState() {
         return cellState;
     }
 
-    public CellType getCellType() {
-        return cellType;
+    public Position position() {
+        return position;
     }
 
-    public int getNearBombs() {
-        return this.nearBombs;
-    }
-
-    public void addNearBomb(){
-        if (getCellType() == CellType.Bomb) return;
-        this.nearBombs++;
+    public Set<Cell> neighbors() {
+        return neighbors;
     }
 
     public enum CellState {
-        NonSelected, Selected, Flag, QuestionMark
-    }
-
-    public enum CellType {
-        Bomb, NotBomb
+        NonSelected, Selected, Flagged, Unknown
     }
 
     @Override
     public String toString() {
-        return "Cell{" +
-                "state=" + cellState +
-                ", type=" + cellType +
-                ", counter=" + nearBombs +
-                '}';
+        return position.toString();
     }
 }

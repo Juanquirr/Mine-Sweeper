@@ -1,9 +1,9 @@
 package software.ulpgc.minesweeper.architecture.view;
 
-import software.ulpgc.minesweeper.architecture.model.BoardMatrix;
+import software.ulpgc.minesweeper.architecture.model.Board;
 
 public interface GameplayPanel {
-    GameplayPanel setBoard(BoardMatrix boardMatrix);
+    GameplayPanel setBoard(Board boardMatrix);
     GameplayPanel showPanel();
     GameplayPanel hidePanel();
 }

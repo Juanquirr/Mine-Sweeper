@@ -1,7 +1,6 @@
 package software.ulpgc.minesweeper.architecture.view;
 
-import software.ulpgc.minesweeper.architecture.model.BoardMatrix;
-import software.ulpgc.minesweeper.architecture.model.BoardRow;
+import software.ulpgc.minesweeper.architecture.model.Board;
 import software.ulpgc.minesweeper.architecture.model.Cell;
 
 import javax.swing.*;
@@ -11,7 +10,7 @@ import java.util.Map;
 
 public class SwingGameplayPanel extends JPanel implements GameplayPanel {
     private final JButton finishButton;
-    private BoardMatrix boardMatrix;
+    private Board boardMatrix;
     private final JPanel headerPanel;
     private final JPanel boardPanel;
     private final JPanel footerPanel;
@@ -53,26 +52,8 @@ public class SwingGameplayPanel extends JPanel implements GameplayPanel {
         return panel;
     }
     @Override
-    public GameplayPanel setBoard(BoardMatrix boardMatrix) {
-        boardMatrix.forEach(System.out::println);
-        boardPanel.removeAll();
-        boardPanel.setLayout(new GridLayout(boardMatrix.height(), boardMatrix.width()));
-        this.boardMatrix= boardMatrix;
-        for (BoardRow row : boardMatrix) {
-            for (Cell cell : row) {
-                JButton button = new JButton(cell.getCellType() == Cell.CellType.Bomb ?
-                        "BOMB!" :
-                        String.valueOf(cell.getNearBombs()));
-                if (cell.getCellType() == Cell.CellType.Bomb) button.setBackground(Color.red);
-                button.setForeground(colorMap.get(cell.getNearBombs()));
-                button.setFont(new Font("Arial", Font.BOLD, 16));
-
-
-                // TODO RE-FACTOR
-                boardPanel.add(button);
-            }
-        }
-        boardPanel.repaint();
+    public GameplayPanel setBoard(Board boardMatrix) {
+        // TODO
         return this;
     }
 
@@ -90,7 +71,7 @@ public class SwingGameplayPanel extends JPanel implements GameplayPanel {
         return this;
     }
 
-    public BoardMatrix boardMatrix() {
+    public Board boardMatrix() {
         return boardMatrix;
     }
 
