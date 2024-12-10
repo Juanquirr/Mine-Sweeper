@@ -17,9 +17,34 @@ public class Board {
         Map<Position, Cell> cells = new HashMap<>();
         for (int i = 0; i < getNumberOfCells(); i++) {
             Position pos = new Position(i / difficulty.width(), i % difficulty.width());
-            cells.put(pos, new Cell(pos));
+            createWithNeighbours(Objects.requireNonNull(cells.put(pos, new Cell(pos))));
         }
         return cells;
+    }
+
+    private void createWithNeighbours(Cell cell) {
+        Position currentCell = cell.position();
+
+        Position pos = new Position(currentCell.x(), currentCell.y() - 1);
+        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+        pos = new Position(currentCell.x(), currentCell.y() + 1);
+        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+        pos = new Position(currentCell.x() - 1, currentCell.y());
+        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+        pos = new Position(currentCell.x() + 1, currentCell.y());
+        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+        pos = new Position(currentCell.x() - 1, currentCell.y() - 1);
+        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+        pos = new Position(currentCell.x() - 1, currentCell.y() + 1);
+        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+        pos = new Position(currentCell.x() + 1, currentCell.y() - 1);
+        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+        pos = new Position(currentCell.x() + 1, currentCell.y() + 1);
+        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+    }
+
+    private boolean isInBounds(Position pos) {
+        return pos.x() >= 0 && pos.x() < difficulty.height() && pos.y() >= 0 && pos.y() < difficulty.width();
     }
 
     private int getNumberOfCells() {
