@@ -1,7 +1,6 @@
 package software.ulpgc.minesweeper.architecture.model;
 
 import java.util.*;
-import java.util.List;
 
 public class Board {
     private final Difficulty difficulty;
@@ -11,7 +10,7 @@ public class Board {
     private Board(Difficulty difficulty) {
         this.difficulty = difficulty;
         this.cells = initializeCells();
-        this.mines = initializeBombCells();
+        this.mines = initializeMines();
     }
 
     private Map<Position, Cell> initializeCells() {
@@ -27,10 +26,10 @@ public class Board {
         return difficulty.width() * difficulty.height();
     }
 
-    private Set<Position> initializeBombCells() {
+    private Set<Position> initializeMines() {
         Set<Position> positions = new HashSet<>();
         Random random = new Random();
-        while (positions.size() < difficulty.getBombsCounter())
+        while (positions.size() < difficulty.numberOfMines())
             positions.add(
                     new Position(
                             random.nextInt(difficulty.width()),

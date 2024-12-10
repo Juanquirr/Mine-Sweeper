@@ -6,16 +6,16 @@ import java.util.Set;
 public class Cell {
     private final Cell.CellState cellState;
     private final Position position;
-    private final Set<Cell> neighbors;
+    private final Set<Cell> neighbours;
 
     public Cell(Position position) {
         this.cellState = CellState.NonSelected;
         this.position = position;
-        this.neighbors = new HashSet<>();
+        this.neighbours = new HashSet<>();
     }
 
-    public Cell addNeighbor(Cell cell) {
-        neighbors.add(cell);
+    public Cell addNeighbour(Cell cell) {
+        neighbours.add(cell);
         return this;
     }
 
@@ -28,7 +28,7 @@ public class Cell {
     }
 
     public Set<Cell> neighbors() {
-        return neighbors;
+        return neighbours;
     }
 
     public enum CellState {

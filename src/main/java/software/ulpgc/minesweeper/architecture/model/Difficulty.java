@@ -7,16 +7,16 @@ public enum Difficulty {
 
     private final int height;
     private final int width;
-    private final int bombsCounter;
+    private final int mines;
 
-    Difficulty(int height, int width, int bombsCounter) {
-        this.bombsCounter = bombsCounter;
+    Difficulty(int height, int width, int mines) {
+        this.mines = mines;
         this.height = height;
         this.width = width;
     }
 
-    public int getBombsCounter() {
-        return bombsCounter;
+    public int numberOfMines() {
+        return mines;
     }
 
     public int height() {

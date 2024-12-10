@@ -1,7 +1,5 @@
 package software.ulpgc.minesweeper.architecture.model;
 
-import java.util.Objects;
-
 public record Position(int x, int y) {
     @Override
     public boolean equals(Object object) {
