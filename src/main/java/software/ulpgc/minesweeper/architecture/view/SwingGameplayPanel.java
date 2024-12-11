@@ -2,11 +2,14 @@ package software.ulpgc.minesweeper.architecture.view;
 
 import software.ulpgc.minesweeper.architecture.model.Board;
 import software.ulpgc.minesweeper.architecture.model.Cell;
+import software.ulpgc.minesweeper.architecture.model.Position;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class SwingGameplayPanel extends JPanel implements GameplayPanel {
     private final JButton finishButton;
@@ -52,9 +55,24 @@ public class SwingGameplayPanel extends JPanel implements GameplayPanel {
         return panel;
     }
     @Override
-    public GameplayPanel setBoard(Board boardMatrix) {
-        // TODO
+    public GameplayPanel setBoard(Board board) {
+        boardPanel.removeAll();
+        boardPanel.setLayout(new GridLayout(board.difficulty().width(), board.difficulty().height()));
+        Set<Position> mines = board.mines();
+        for (int i = 0; i < board.difficulty().height() * board.difficulty().width(); i++)
+            boardPanel.add(new JButton(getMinesCounter(board, new Position(i / board.difficulty().width(), i % board.difficulty().width()))));
         return this;
+    }
+
+    private String getMinesCounter(Board board, Position position) {
+        if (board.mines().contains(position)) return "B";
+        Cell cell = board.get(position);
+        int i = 0;
+        for (Cell neighbor : cell.neighbors().stream().filter(Objects::nonNull).toList()) {
+            if (board.mines().contains(neighbor.position()))
+                i++;
+        }
+        return String.valueOf(i);
     }
 
     @Override

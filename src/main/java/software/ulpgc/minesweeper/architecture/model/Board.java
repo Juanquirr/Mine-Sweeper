@@ -9,38 +9,43 @@ public class Board {
 
     private Board(Difficulty difficulty) {
         this.difficulty = difficulty;
-        this.cells = initializeCells();
+        this.cells = new HashMap<>();
+        initializeCells();
         this.mines = initializeMines();
     }
 
-    private Map<Position, Cell> initializeCells() {
-        Map<Position, Cell> cells = new HashMap<>();
+    private void initializeCells() {
         for (int i = 0; i < getNumberOfCells(); i++) {
             Position pos = new Position(i / difficulty.width(), i % difficulty.width());
-            createWithNeighbours(Objects.requireNonNull(cells.put(pos, new Cell(pos))));
+            Cell cell;
+            cells.put(pos, cell = new Cell(pos));
+            createWithNeighbours(cell);
         }
-        return cells;
     }
 
     private void createWithNeighbours(Cell cell) {
-        Position currentCell = cell.position();
+        for (int[] delta : getDeltas()) {
+            Position neighbourPosition = getNeighbourPosition(delta, cell.position());
+            cell.addNeighbour(
+                    !isInBounds(neighbourPosition) ?
+                            null : cells.computeIfAbsent(neighbourPosition, Cell::new)
+            );
+        }
+    }
 
-        Position pos = new Position(currentCell.x(), currentCell.y() - 1);
-        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
-        pos = new Position(currentCell.x(), currentCell.y() + 1);
-        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
-        pos = new Position(currentCell.x() - 1, currentCell.y());
-        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
-        pos = new Position(currentCell.x() + 1, currentCell.y());
-        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
-        pos = new Position(currentCell.x() - 1, currentCell.y() - 1);
-        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
-        pos = new Position(currentCell.x() - 1, currentCell.y() + 1);
-        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
-        pos = new Position(currentCell.x() + 1, currentCell.y() - 1);
-        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
-        pos = new Position(currentCell.x() + 1, currentCell.y() + 1);
-        if (isInBounds(pos)) cell.addNeighbour(new Cell(pos));
+    private static Position getNeighbourPosition(int[] delta, Position centralPosition) {
+        return new Position(
+                centralPosition.x() + delta[0],
+                centralPosition.y() + delta[1]
+        );
+    }
+
+    private static int[][] getDeltas() {
+        return new int[][]{
+                {-1, -1}, {-1, 0}, {-1, 1},
+                {0, 1}, {1, 1}, {1, 0},
+                {1, -1}, {0, -1}
+        };
     }
 
     private boolean isInBounds(Position pos) {
@@ -74,6 +79,10 @@ public class Board {
 
     public static Board ofDifficulty(Difficulty difficulty) {
         return new Board(difficulty);
+    }
+
+    public Cell get(Position position) {
+        return cells.get(position);
     }
 
     @Override

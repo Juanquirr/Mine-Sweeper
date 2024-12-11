@@ -1,17 +1,19 @@
 package software.ulpgc.minesweeper.architecture.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Cell {
     private final Cell.CellState cellState;
     private final Position position;
-    private final Set<Cell> neighbours;
+    private final List<Cell> neighbours;
 
     public Cell(Position position) {
         this.cellState = CellState.NonSelected;
         this.position = position;
-        this.neighbours = new HashSet<>();
+        this.neighbours = new ArrayList<>();
     }
 
     public Cell addNeighbour(Cell cell) {
@@ -27,7 +29,7 @@ public class Cell {
         return position;
     }
 
-    public Set<Cell> neighbors() {
+    public List<Cell> neighbors() {
         return neighbours;
     }
 
