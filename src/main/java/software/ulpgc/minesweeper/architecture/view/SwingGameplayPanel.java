@@ -66,7 +66,7 @@ public class SwingGameplayPanel extends JPanel implements GameplayPanel {
 
     private String getMinesCounter(Board board, Position position) {
         if (board.mines().contains(position)) return "B";
-        Cell cell = board.get(position);
+        Cell cell = board.cellAt(position);
         int i = 0;
         for (Cell neighbor : cell.neighbors().stream().filter(Objects::nonNull).toList()) {
             if (board.mines().contains(neighbor.position()))

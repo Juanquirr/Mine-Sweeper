@@ -16,7 +16,13 @@ public class StartCommand implements Command {
     @Override
     public void execute() {
         loadingPanel.hidePanel();
-        gameplayPanel.setBoard(Board.ofDifficulty(loadingPanel.difficultyDialog().get()));
+        Board board = new Board.Builder()
+                .difficulty(loadingPanel.difficultyDialog().get())
+                .build();
+        gameplayPanel.setBoard(
+                board
+        );
+        System.out.println(board);
         gameplayPanel.showPanel();
     }
 }

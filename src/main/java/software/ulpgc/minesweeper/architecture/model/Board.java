@@ -1,39 +1,46 @@
 package software.ulpgc.minesweeper.architecture.model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Board {
     private final Difficulty difficulty;
     private final Map<Position, Cell> cells;
-    private final Set<Position> mines;
+    private Set<Position> mines;
 
     private Board(Difficulty difficulty) {
         this.difficulty = difficulty;
         this.cells = new HashMap<>();
         initializeCells();
-        this.mines = initializeMines();
+        this.mines = new HashSet<>();
     }
 
     private void initializeCells() {
-        for (int i = 0; i < getNumberOfCells(); i++) {
-            Position pos = new Position(i / difficulty.width(), i % difficulty.width());
-            Cell cell;
-            cells.put(pos, cell = new Cell(pos));
-            createWithNeighbours(cell);
-        }
+        for (int i = 0; i < getNumberOfCells(); i++)
+            createCellWithNeighbours(getOrCreateCellAt(createPositionGiven(i)));
     }
 
-    private void createWithNeighbours(Cell cell) {
-        for (int[] delta : getDeltas()) {
-            Position neighbourPosition = getNeighbourPosition(delta, cell.position());
-            cell.addNeighbour(
-                    !isInBounds(neighbourPosition) ?
-                            null : cells.computeIfAbsent(neighbourPosition, Cell::new)
-            );
-        }
+    private Position createPositionGiven(int i) {
+        return new Position(i / difficulty.width(), i % difficulty.width());
     }
 
-    private static Position getNeighbourPosition(int[] delta, Position centralPosition) {
+    private void createCellWithNeighbours(Cell cell) {
+        getNeighbourPositionsWithDeltas(cell.position())
+                .forEach(p -> cell.addNeighbour(getOrCreateCellAt(p)));
+    }
+
+    private Cell getOrCreateCellAt(Position position) {
+        return cells.computeIfAbsent(position, Cell::new);
+    }
+
+    private List<Position> getNeighbourPositionsWithDeltas(Position position) {
+        return Arrays.stream(getDeltas())
+                .map(delta -> getNeighbourPositionWithDelta(delta, position))
+                .filter(this::isInBounds)
+                .toList();
+    }
+
+    private static Position getNeighbourPositionWithDelta(int[] delta, Position centralPosition) {
         return new Position(
                 centralPosition.x() + delta[0],
                 centralPosition.y() + delta[1]
@@ -56,17 +63,18 @@ public class Board {
         return difficulty.width() * difficulty.height();
     }
 
-    private Set<Position> initializeMines() {
-        Set<Position> positions = new HashSet<>();
-        Random random = new Random();
-        while (positions.size() < difficulty.numberOfMines())
-            positions.add(
-                    new Position(
-                            random.nextInt(difficulty.width()),
-                            random.nextInt(difficulty.height())
-                    )
-            );
-        return positions;
+    public Set<Position> initializeMines() {
+        if (!this.mines.isEmpty()) return this.mines;
+        return this.mines = new Random()
+                .ints(0, difficulty().width())
+                .mapToObj(x -> new Position(x, randomHeight()))
+                .distinct()
+                .limit(difficulty().numberOfMines())
+                .collect(Collectors.toSet());
+    }
+
+    private int randomHeight() {
+        return new Random().nextInt(difficulty().height());
     }
 
     public Difficulty difficulty() {
@@ -81,7 +89,7 @@ public class Board {
         return new Board(difficulty);
     }
 
-    public Cell get(Position position) {
+    public Cell cellAt(Position position) {
         return cells.get(position);
     }
 
@@ -100,6 +108,20 @@ public class Board {
     }
 
     private Position getPosition(int i) {
-        return new Position(i / difficulty.width(), i % difficulty.width());
+        return createPositionGiven(i);
+    }
+
+    public static class Builder {
+        private Difficulty difficulty;
+        private Set<Position> mines;
+
+        public Builder difficulty(Difficulty difficulty) {
+            this.difficulty = difficulty;
+            return this;
+        }
+
+        public Board build() {
+            return Board.ofDifficulty(difficulty);
+        }
     }
 }
