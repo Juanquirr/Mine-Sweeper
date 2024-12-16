@@ -19,7 +19,7 @@ public class MainFrame extends JFrame {
         setResizable(false);
         CardLayout layout = new CardLayout();
         getContentPane().setLayout(layout);
-        setSize(1000, 800);
+        setSize(900, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         add(this.gameplayPanel = createGameplayPanel(), "GAME");

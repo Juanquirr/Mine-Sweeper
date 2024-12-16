@@ -21,8 +21,6 @@ public class StartCommand implements Command {
                 .build();
         gameplayPanel.setBoard(
                 board
-        );
-        System.out.println(board);
-        gameplayPanel.showPanel();
+        ).showPanel();
     }
 }

@@ -26,7 +26,6 @@ public class SwingLoadingPanel extends JPanel implements LoadingPanel {
     private JPanel createCenterPanel(SwingDifficultyDialog difficultyDialog) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(Box.createVerticalStrut(300));
         panel.add(difficultyDialog);
         return panel;
     }
