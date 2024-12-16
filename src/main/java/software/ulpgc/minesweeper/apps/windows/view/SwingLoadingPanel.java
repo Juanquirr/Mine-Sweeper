@@ -1,4 +1,6 @@
-package software.ulpgc.minesweeper.architecture.view;
+package software.ulpgc.minesweeper.apps.windows.view;
+
+import software.ulpgc.minesweeper.architecture.view.LoadingPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,20 +13,33 @@ public class SwingLoadingPanel extends JPanel implements LoadingPanel {
     private final SwingDifficultyDialog difficultyDialog;
 
     public SwingLoadingPanel() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new BorderLayout());
         setBackground(Color.BLACK);
 
+        customFont = createCustomFont();
+
+        add(BorderLayout.NORTH, createTitleDisplay());
+        add(BorderLayout.CENTER, createCenterPanel(this.difficultyDialog = createDifficultyDialog()));
+        add(BorderLayout.SOUTH, toolbar(this.startButton = createStartButton()));
+    }
+
+    private JPanel createCenterPanel(SwingDifficultyDialog difficultyDialog) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(Box.createVerticalStrut(300));
+        panel.add(difficultyDialog);
+        return panel;
+    }
+
+
+    private Font createCustomFont() {
+        final Font customFont;
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, new File("LuckiestGuy-Regular.ttf")).deriveFont(24f);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load font", e);
         }
-
-        add(displayTitle());
-        add(Box.createVerticalStrut(10));
-        add(this.difficultyDialog = createDifficultyDialog());
-        add(Box.createVerticalStrut(100));
-        add(toolbar(this.startButton = createStartButton()));
+        return customFont;
     }
 
     private JPanel toolbar(JButton button) {
@@ -36,18 +51,22 @@ public class SwingLoadingPanel extends JPanel implements LoadingPanel {
 
     private JButton createStartButton() {
         JButton button = new JButton("START");
-        button.setMaximumSize(new Dimension(800, 50));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         return button;
     }
 
-    private Component displayTitle() {
+    private JPanel createTitleDisplay() {
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         JLabel label = new JLabel("MINESWEEPER", SwingConstants.CENTER);
         label.setForeground(Color.WHITE);
-        label.setMaximumSize(new Dimension(800, 200));
         label.setFont(customFont.deriveFont(40f));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar en BoxLayout
-        return label;
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(Box.createVerticalStrut(30));
+        panel.add(label);
+        panel.add(Box.createVerticalStrut(20));
+        return panel;
     }
 
     private JButton customizeButton(String text) {

@@ -3,9 +3,6 @@ package software.ulpgc.minesweeper.apps.windows;
 import software.ulpgc.minesweeper.architecture.control.Command;
 import software.ulpgc.minesweeper.architecture.control.FinishCommand;
 import software.ulpgc.minesweeper.architecture.control.StartCommand;
-import software.ulpgc.minesweeper.architecture.model.Board;
-import software.ulpgc.minesweeper.architecture.model.Difficulty;
-import software.ulpgc.minesweeper.architecture.model.Position;
 import software.ulpgc.minesweeper.architecture.view.MainFrame;
 
 import java.util.HashMap;

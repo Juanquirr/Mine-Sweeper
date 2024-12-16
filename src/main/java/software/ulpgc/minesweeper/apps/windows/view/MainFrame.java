@@ -1,5 +1,7 @@
 package software.ulpgc.minesweeper.architecture.view;
 
+import software.ulpgc.minesweeper.apps.windows.view.SwingGameplayPanel;
+import software.ulpgc.minesweeper.apps.windows.view.SwingLoadingPanel;
 import software.ulpgc.minesweeper.architecture.control.Command;
 
 import javax.swing.*;

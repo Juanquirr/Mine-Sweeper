@@ -1,14 +1,14 @@
 package software.ulpgc.minesweeper.architecture.control;
 
 import software.ulpgc.minesweeper.architecture.model.Board;
-import software.ulpgc.minesweeper.architecture.view.GameplayPanel;
+import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
 import software.ulpgc.minesweeper.architecture.view.LoadingPanel;
 
 public class StartCommand implements Command {
     private final LoadingPanel loadingPanel;
-    private final GameplayPanel gameplayPanel;
+    private final BoardDisplay gameplayPanel;
 
-    public StartCommand(LoadingPanel loadingPanel, GameplayPanel gameplayPanel) {
+    public StartCommand(LoadingPanel loadingPanel, BoardDisplay gameplayPanel) {
         this.loadingPanel = loadingPanel;
         this.gameplayPanel = gameplayPanel;
     }

@@ -63,11 +63,12 @@ public class Board {
         return difficulty.width() * difficulty.height();
     }
 
-    public Set<Position> initializeMines() {
+    public Set<Position> initializeMines(Position position) {
         if (!this.mines.isEmpty()) return this.mines;
         return this.mines = new Random()
                 .ints(0, difficulty().width())
                 .mapToObj(x -> new Position(x, randomHeight()))
+                .filter(p -> !p.equals(position))
                 .distinct()
                 .limit(difficulty().numberOfMines())
                 .collect(Collectors.toSet());

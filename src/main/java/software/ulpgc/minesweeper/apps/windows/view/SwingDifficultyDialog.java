@@ -1,8 +1,9 @@
-package software.ulpgc.minesweeper.architecture.view;
+package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.architecture.model.Difficulty;
-import software.ulpgc.minesweeper.architecture.view.customization.ButtonStyler;
-import software.ulpgc.minesweeper.architecture.view.customization.CustomizedButton;
+import software.ulpgc.minesweeper.architecture.view.DifficultyDialog;
+import software.ulpgc.minesweeper.apps.windows.view.customization.ButtonStyler;
+import software.ulpgc.minesweeper.apps.windows.view.customization.CustomizedButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,13 +23,12 @@ public class SwingDifficultyDialog extends JPanel implements DifficultyDialog {
     }
 
     private JToggleButton[] createButtons() {
-        CustomizedButton easyButton = new CustomizedButton("EASY");
+        CustomizedButton easyButton = new CustomizedButton("BEGINNER");
         ButtonStyler.applySelectedButtonStyle(easyButton);
         return new JToggleButton[]{
                 easyButton,
-                new CustomizedButton("MEDIUM"),
-                new CustomizedButton("HARD"),
-                new CustomizedButton("EXPERT")
+                new CustomizedButton("INTERMEDIATE"),
+                new CustomizedButton("EXPERT"),
         };
     }
 

@@ -1,4 +1,4 @@
-package software.ulpgc.minesweeper.architecture.view.customization;
+package software.ulpgc.minesweeper.apps.windows.view.customization;
 
 import javax.swing.*;
 import java.awt.*;
