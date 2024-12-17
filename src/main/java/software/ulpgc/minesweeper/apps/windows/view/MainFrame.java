@@ -1,7 +1,5 @@
-package software.ulpgc.minesweeper.architecture.view;
+package software.ulpgc.minesweeper.apps.windows.view;
 
-import software.ulpgc.minesweeper.apps.windows.view.SwingGameplayPanel;
-import software.ulpgc.minesweeper.apps.windows.view.SwingLoadingPanel;
 import software.ulpgc.minesweeper.architecture.control.Command;
 
 import javax.swing.*;
@@ -31,13 +29,13 @@ public class MainFrame extends JFrame {
 
     private SwingGameplayPanel createGameplayPanel() {
         SwingGameplayPanel gameplayPanel = new SwingGameplayPanel();
-        gameplayPanel.finishButton().addActionListener(e -> commands.get("finish").execute());
+        gameplayPanel.finishButton().addActionListener(_ -> commands.get("finish").execute());
         return gameplayPanel;
     }
 
     private SwingLoadingPanel createLoadingPanel() {
         SwingLoadingPanel loadingPanel = new SwingLoadingPanel();
-        loadingPanel.startButton().addActionListener(e -> commands.get("start_game").execute());
+        loadingPanel.startButton().addActionListener(_ -> commands.get("start_game").execute());
         return loadingPanel;
     }
 

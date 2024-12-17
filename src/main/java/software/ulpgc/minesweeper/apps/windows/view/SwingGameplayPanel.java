@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
+import static java.lang.Integer.parseInt;
+
 public class SwingGameplayPanel extends JPanel implements BoardDisplay {
     private final JButton finishButton;
     private Board boardMatrix;
@@ -70,7 +72,7 @@ public class SwingGameplayPanel extends JPanel implements BoardDisplay {
                     )
             );
         }
-        buttons.entrySet().forEach(e -> e.getValue().addActionListener(_ -> this.exploreSafeCells(board, e.getKey())));
+        buttons.forEach((key, value) -> value.addActionListener(_ -> this.exploreSafeCells(board, key)));
         return this;
     }
 
@@ -91,6 +93,7 @@ public class SwingGameplayPanel extends JPanel implements BoardDisplay {
         Set<Position> edges = new HashSet<>();
         explore(board, board.cellAt(startPosition), visited, safeCells, edges);
         edges.forEach(p -> buttons.get(p).setText(getMinesCounterString(board, board.cellAt(p))));
+        edges.forEach(p -> buttons.get(p).setForeground(colorMap.get(parseInt(getMinesCounter(board, p)))));
     }
 
     private void explore(Board board, Cell cell, Set<Position> visited, Set<Position> safeCells, Set<Position> edgeCells) {
@@ -145,4 +148,9 @@ public class SwingGameplayPanel extends JPanel implements BoardDisplay {
     public JButton finishButton() {
         return finishButton;
     }
+
+    public Map<Integer, Color> getColorMap() {
+        return colorMap;
+    }
+
 }

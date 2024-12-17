@@ -1,9 +1,9 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
+import software.ulpgc.minesweeper.apps.windows.view.customization.CustomizedButton;
 import software.ulpgc.minesweeper.architecture.model.Difficulty;
 import software.ulpgc.minesweeper.architecture.view.DifficultyDialog;
 import software.ulpgc.minesweeper.apps.windows.view.customization.ButtonStyler;
-import software.ulpgc.minesweeper.apps.windows.view.customization.CustomizedButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,23 +17,22 @@ public class SwingDifficultyDialog extends JPanel implements DifficultyDialog {
         this.group = new ButtonGroup();
         for (JToggleButton button : createButtons()) {
             add(button);
-            button.addActionListener(e -> updateButtonStyles(button));
+            button.addActionListener(_ -> updateButtonStyles(button));
             group.add(button);
         }
     }
 
     private JToggleButton[] createButtons() {
-        CustomizedButton easyButton = new CustomizedButton("BEGINNER");
+        CustomizedButton easyButton = new CustomizedButton().personalizeButton("BEGINNER");
         ButtonStyler.applySelectedButtonStyle(easyButton);
         return new JToggleButton[]{
                 easyButton,
-                new CustomizedButton("INTERMEDIATE"),
-                new CustomizedButton("EXPERT"),
+                new CustomizedButton().personalizeButton("INTERMEDIATE"),
+                new CustomizedButton().personalizeButton("EXPERT")
         };
     }
 
     private void updateButtonStyles(JToggleButton selectedButton) {
-        Font customFont = selectedButton.getFont();
         for (Component component : getComponents()) {
             if (component.equals(selectedButton)) {
                 ButtonStyler.applySelectedButtonStyle((CustomizedButton) component);

@@ -1,9 +1,9 @@
 package software.ulpgc.minesweeper.apps.windows;
 
+import software.ulpgc.minesweeper.apps.windows.view.MainFrame;
 import software.ulpgc.minesweeper.architecture.control.Command;
 import software.ulpgc.minesweeper.architecture.control.FinishCommand;
 import software.ulpgc.minesweeper.architecture.control.StartCommand;
-import software.ulpgc.minesweeper.architecture.view.MainFrame;
 
 import java.util.HashMap;
 import java.util.Map;
