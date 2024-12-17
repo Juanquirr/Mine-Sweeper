@@ -1,6 +1,6 @@
 package software.ulpgc.minesweeper.architecture.model;
 
-public enum Difficulty {
+public enum Level {
     BEGINNER(5, 5, 4),
     INTERMEDIATE(10, 10, 8),
     EXPERT(20, 20, 50);
@@ -9,7 +9,7 @@ public enum Difficulty {
     private final int width;
     private final int mines;
 
-    Difficulty(int height, int width, int mines) {
+    Level(int height, int width, int mines) {
         this.mines = mines;
         this.height = height;
         this.width = width;

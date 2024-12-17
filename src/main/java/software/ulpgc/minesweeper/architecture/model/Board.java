@@ -4,12 +4,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board {
-    private final Difficulty difficulty;
+    private final Level level;
     private final Map<Position, Cell> cells;
-    private Set<Position> mines;
+    private final Set<Position> mines;
 
-    private Board(Difficulty difficulty) {
-        this.difficulty = difficulty;
+    private Board(Level level) {
+        this.level = level;
         this.cells = new HashMap<>();
         initializeCells();
         this.mines = new HashSet<>();
@@ -21,7 +21,7 @@ public class Board {
     }
 
     private Position createPositionGiven(int i) {
-        return new Position(i / difficulty.width(), i % difficulty.width());
+        return new Position(i / level.width(), i % level.width());
     }
 
     private void createCellWithNeighbours(Cell cell) {
@@ -56,16 +56,19 @@ public class Board {
     }
 
     private boolean isInBounds(Position pos) {
-        return pos.x() >= 0 && pos.x() < difficulty.height() && pos.y() >= 0 && pos.y() < difficulty.width();
+        return pos.x() >= 0 && pos.x() < level.height() && pos.y() >= 0 && pos.y() < level.width();
     }
 
     private int getNumberOfCells() {
-        return difficulty.width() * difficulty.height();
+        return level.width() * level.height();
     }
 
-    public Set<Position> initializeMines(Position position) {
-        if (!this.mines.isEmpty()) return this.mines;
-        return this.mines = new Random()
+    public void initializeMines(Position position) {
+        return !this.mines.isEmpty() ? this.mines : this.mines.addAll(creaateMinesExcluding(position));
+    }
+
+    private Set<Position> creaateMinesExcluding(Position position) {
+        return new Random()
                 .ints(0, difficulty().width())
                 .mapToObj(x -> new Position(x, randomHeight()))
                 .filter(p -> !p.equals(position))
@@ -78,16 +81,16 @@ public class Board {
         return new Random().nextInt(difficulty().height());
     }
 
-    public Difficulty difficulty() {
-        return difficulty;
+    public Level difficulty() {
+        return level;
     }
 
     public Set<Position> mines() {
         return mines;
     }
 
-    public static Board ofDifficulty(Difficulty difficulty) {
-        return new Board(difficulty);
+    public static Board ofDifficulty(Level level) {
+        return new Board(level);
     }
 
     public Cell cellAt(Position position) {
@@ -99,11 +102,11 @@ public class Board {
         StringBuilder r = new StringBuilder();
         int last = 0;
         for (int i = 0; i < getNumberOfCells(); i++) {
-            if (i / difficulty.width() > last) r.append("\n");
+            if (i / level.width() > last) r.append("\n");
             r.append(
                     String.format("%s ", cells.get(getPosition(i)))
             );
-            last = i / difficulty.width();
+            last = i / level.width();
         }
        return r.toString();
     }
@@ -113,16 +116,16 @@ public class Board {
     }
 
     public static class Builder {
-        private Difficulty difficulty;
+        private Level level;
         private Set<Position> mines;
 
-        public Builder difficulty(Difficulty difficulty) {
-            this.difficulty = difficulty;
+        public Builder difficulty(Level level) {
+            this.level = level;
             return this;
         }
 
         public Board build() {
-            return Board.ofDifficulty(difficulty);
+            return Board.ofDifficulty(level);
         }
     }
 }
