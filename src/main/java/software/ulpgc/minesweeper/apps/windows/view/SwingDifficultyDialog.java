@@ -1,6 +1,6 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
-import software.ulpgc.minesweeper.architecture.model.Difficulty;
+import software.ulpgc.minesweeper.architecture.model.Level;
 import software.ulpgc.minesweeper.architecture.view.DifficultyDialog;
 import software.ulpgc.minesweeper.apps.windows.view.customization.ButtonStyler;
 import software.ulpgc.minesweeper.apps.windows.view.customization.CustomizedButton;
@@ -45,8 +45,8 @@ public class SwingDifficultyDialog extends JPanel implements DifficultyDialog {
     }
 
     @Override
-    public Difficulty get() {
-        System.out.println(Difficulty.valueOf(group.getSelection().getActionCommand()));
-        return Difficulty.valueOf(group.getSelection().getActionCommand());
+    public Level get() {
+        System.out.println(Level.valueOf(group.getSelection().getActionCommand()));
+        return Level.valueOf(group.getSelection().getActionCommand());
     }
 }

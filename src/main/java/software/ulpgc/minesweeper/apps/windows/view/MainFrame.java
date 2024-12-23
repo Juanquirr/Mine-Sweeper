@@ -1,7 +1,5 @@
-package software.ulpgc.minesweeper.architecture.view;
+package software.ulpgc.minesweeper.apps.windows.view;
 
-import software.ulpgc.minesweeper.apps.windows.view.SwingGameplayPanel;
-import software.ulpgc.minesweeper.apps.windows.view.SwingLoadingPanel;
 import software.ulpgc.minesweeper.architecture.control.Command;
 
 import javax.swing.*;
@@ -14,7 +12,8 @@ public class MainFrame extends JFrame {
     private final SwingGameplayPanel gameplayPanel;
     private final Map<String, Command> commands;
 
-    public MainFrame() throws HeadlessException {
+    private MainFrame() throws HeadlessException {
+        this.commands = new HashMap<>();
         setTitle("Minesweeper");
         setResizable(false);
         CardLayout layout = new CardLayout();
@@ -26,13 +25,21 @@ public class MainFrame extends JFrame {
         add(this.loadingPanel = createLoadingPanel(), "LOADING");
         layout.show(getContentPane(), "GAME");
         layout.show(getContentPane(), "LOADING");
-        this.commands = new HashMap<>();
+    }
+
+    public static MainFrame create() {
+        return new MainFrame();
+    }
+
+    public MainFrame addCommand(String name, Command command) {
+        commands.put(name, command);
+        return this;
     }
 
     private SwingGameplayPanel createGameplayPanel() {
-        SwingGameplayPanel gameplayPanel = new SwingGameplayPanel();
-        gameplayPanel.finishButton().addActionListener(e -> commands.get("finish").execute());
-        return gameplayPanel;
+        SwingGameplayPanel swingGameplayPanel = new SwingGameplayPanel();
+        swingGameplayPanel.finalizeButton().addActionListener(e -> commands.get("finish").execute());
+        return swingGameplayPanel;
     }
 
     private SwingLoadingPanel createLoadingPanel() {
