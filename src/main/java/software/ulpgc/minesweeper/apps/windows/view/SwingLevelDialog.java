@@ -1,38 +1,39 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
-import software.ulpgc.minesweeper.apps.windows.view.customization.CustomizedButton;
 import software.ulpgc.minesweeper.architecture.model.Level;
-import software.ulpgc.minesweeper.architecture.view.DifficultyDialog;
+import software.ulpgc.minesweeper.architecture.view.LevelDialog;
 import software.ulpgc.minesweeper.apps.windows.view.customization.ButtonStyler;
+import software.ulpgc.minesweeper.apps.windows.view.customization.CustomizedButton;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SwingDifficultyDialog extends JPanel implements DifficultyDialog {
+public class SwingLevelDialog extends JPanel implements LevelDialog {
     private final ButtonGroup group;
 
-    public SwingDifficultyDialog() {
+    public SwingLevelDialog() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.darkGray);
         this.group = new ButtonGroup();
         for (JToggleButton button : createButtons()) {
             add(button);
-            button.addActionListener(_ -> updateButtonStyles(button));
+            button.addActionListener(e -> updateButtonStyles(button));
             group.add(button);
         }
     }
 
     private JToggleButton[] createButtons() {
-        CustomizedButton easyButton = new CustomizedButton().personalizeButton("BEGINNER");
+        CustomizedButton easyButton = new CustomizedButton("BEGINNER");
         ButtonStyler.applySelectedButtonStyle(easyButton);
         return new JToggleButton[]{
                 easyButton,
-                new CustomizedButton().personalizeButton("INTERMEDIATE"),
-                new CustomizedButton().personalizeButton("EXPERT")
+                new CustomizedButton("INTERMEDIATE"),
+                new CustomizedButton("EXPERT"),
         };
     }
 
     private void updateButtonStyles(JToggleButton selectedButton) {
+        Font customFont = selectedButton.getFont();
         for (Component component : getComponents()) {
             if (component.equals(selectedButton)) {
                 ButtonStyler.applySelectedButtonStyle((CustomizedButton) component);

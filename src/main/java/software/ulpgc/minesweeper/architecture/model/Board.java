@@ -5,46 +5,66 @@ import java.util.stream.Collectors;
 
 public class Board {
     private final Level level;
-    private final Map<Position, Cell> cells;
-    private final Set<Position> mines;
+    private final List<Cell> cells;
+    private final Set<Cell.Position> mines;
 
-    private Board(Level level) {
+    public Board(Level level) {
         this.level = level;
-        this.cells = new HashMap<>();
-        initializeCells();
+        this.cells = initializeCells();
         this.mines = new HashSet<>();
     }
 
-    private void initializeCells() {
-        for (int i = 0; i < getNumberOfCells(); i++)
-            createCellWithNeighbours(getOrCreateCellAt(createPositionGiven(i)));
+    public Level level() {
+        return level;
     }
 
-    private Position createPositionGiven(int i) {
-        return new Position(i / level.width(), i % level.width());
+    public Cell cellAt(Cell.Position position) {
+        return cells.get(position.row() * level.width() + position.column());
     }
 
-    private void createCellWithNeighbours(Cell cell) {
-        getNeighbourPositionsWithDeltas(cell.position())
-                .forEach(p -> cell.addNeighbour(getOrCreateCellAt(p)));
-    }
-
-    private Cell getOrCreateCellAt(Position position) {
-        return cells.computeIfAbsent(position, Cell::new);
-    }
-
-    private List<Position> getNeighbourPositionsWithDeltas(Position position) {
+    public List<Cell.Position> cellNeighborsOf(Cell.Position position) {
         return Arrays.stream(getDeltas())
-                .map(delta -> getNeighbourPositionWithDelta(delta, position))
+                .map(d -> new Cell.Position(position.row() + d[0], position.column() + d[1]))
                 .filter(this::isInBounds)
                 .toList();
     }
 
-    private static Position getNeighbourPositionWithDelta(int[] delta, Position centralPosition) {
-        return new Position(
-                centralPosition.x() + delta[0],
-                centralPosition.y() + delta[1]
-        );
+    private boolean isInBounds(Cell.Position p) {
+        return p.row() >= 0 && p.row() < level().height() && p.column() >= 0 && p.column() < level().width();
+    }
+
+    private List<Cell> initializeCells() {
+        List<Cell> cells = new ArrayList<>();
+        for (int i = 0; i < level.width() * level.height(); i++) {
+            Cell.Position pos = new Cell.Position(i / level.width(), i % level.width());
+            cells.add(
+                    new Cell() {
+                        private final CellState cellState = CellState.NonSelected;
+
+                        @Override
+                        public CellState cellState() { return cellState; }
+
+                        @Override
+                        public Position position() { return pos; }
+                    }
+            );
+        }
+        return cells;
+    }
+
+    public void initializeMinesExcluding(Cell.Position position) {
+        if (!this.mines.isEmpty()) return;
+        this.mines.addAll(new Random()
+                .ints(0, level().width())
+                .mapToObj(x -> new Cell.Position(x, randomHeight()))
+                .filter(p -> !p.equals(position))
+                .distinct()
+                .limit(level().numberOfMines())
+                .collect(Collectors.toSet()));
+    }
+
+    public boolean hasMineIn(Cell.Position position) {
+        return mines.contains(position);
     }
 
     private static int[][] getDeltas() {
@@ -55,77 +75,7 @@ public class Board {
         };
     }
 
-    private boolean isInBounds(Position pos) {
-        return pos.x() >= 0 && pos.x() < level.height() && pos.y() >= 0 && pos.y() < level.width();
-    }
-
-    private int getNumberOfCells() {
-        return level.width() * level.height();
-    }
-
-    public void initializeMines(Position position) {
-        return !this.mines.isEmpty() ? this.mines : this.mines.addAll(creaateMinesExcluding(position));
-    }
-
-    private Set<Position> creaateMinesExcluding(Position position) {
-        return new Random()
-                .ints(0, difficulty().width())
-                .mapToObj(x -> new Position(x, randomHeight()))
-                .filter(p -> !p.equals(position))
-                .distinct()
-                .limit(difficulty().numberOfMines())
-                .collect(Collectors.toSet());
-    }
-
     private int randomHeight() {
-        return new Random().nextInt(difficulty().height());
-    }
-
-    public Level difficulty() {
-        return level;
-    }
-
-    public Set<Position> mines() {
-        return mines;
-    }
-
-    public static Board ofDifficulty(Level level) {
-        return new Board(level);
-    }
-
-    public Cell cellAt(Position position) {
-        return cells.get(position);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder r = new StringBuilder();
-        int last = 0;
-        for (int i = 0; i < getNumberOfCells(); i++) {
-            if (i / level.width() > last) r.append("\n");
-            r.append(
-                    String.format("%s ", cells.get(getPosition(i)))
-            );
-            last = i / level.width();
-        }
-       return r.toString();
-    }
-
-    private Position getPosition(int i) {
-        return createPositionGiven(i);
-    }
-
-    public static class Builder {
-        private Level level;
-        private Set<Position> mines;
-
-        public Builder difficulty(Level level) {
-            this.level = level;
-            return this;
-        }
-
-        public Board build() {
-            return Board.ofDifficulty(level);
-        }
+        return new Random().nextInt(level().height());
     }
 }

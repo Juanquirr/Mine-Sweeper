@@ -1,7 +1,5 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
-import software.ulpgc.minesweeper.apps.windows.view.customization.CustomFont;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -14,8 +12,9 @@ public class Chronometer extends JPanel {
 
     public Chronometer() {
         add(this.label = new JLabel("00:00"));
-        this.label.setFont(new CustomFont().loadFont().deriveFont(26f));
-        this.timer = new Timer(1000, _ -> {
+        this.label.setBorder(new LineBorder(new Color(0,0,10), 4));
+        this.label.setFont(new Font("Arial", Font.PLAIN, 20));
+        this.timer = new Timer(1000, e -> {
             this.label.setText(normalize());
             counter.getAndIncrement();
         });

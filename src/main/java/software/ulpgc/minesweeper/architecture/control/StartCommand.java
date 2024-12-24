@@ -1,26 +1,24 @@
 package software.ulpgc.minesweeper.architecture.control;
 
-import software.ulpgc.minesweeper.architecture.model.Board;
-import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
-import software.ulpgc.minesweeper.architecture.view.LoadingPanel;
+import software.ulpgc.minesweeper.architecture.model.BoardBuilder;
+import software.ulpgc.minesweeper.architecture.view.GameDisplay;
+import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
 
 public class StartCommand implements Command {
-    private final LoadingPanel loadingPanel;
-    private final BoardDisplay gameplayPanel;
+    private final MainMenuPanel mainMenuPanel;
+    private final BoardPresenter presenter;
 
-    public StartCommand(LoadingPanel loadingPanel, BoardDisplay gameplayPanel) {
-        this.loadingPanel = loadingPanel;
-        this.gameplayPanel = gameplayPanel;
+    public StartCommand(MainMenuPanel mainMenuPanel, GameDisplay gameDisplay, BoardPresenter presenter) {
+        this.mainMenuPanel = mainMenuPanel;
+        this.presenter = presenter;
     }
 
     @Override
     public void execute() {
-        loadingPanel.hidePanel();
-        Board board = new Board.Builder()
-                .difficulty(loadingPanel.difficultyDialog().get())
-                .build();
-        gameplayPanel.setBoard(
-                board
-        ).showPanel();
+        presenter.show(
+                new BoardBuilder()
+                        .level(mainMenuPanel.difficultyDialog().get())
+                        .build()
+        );
     }
 }
