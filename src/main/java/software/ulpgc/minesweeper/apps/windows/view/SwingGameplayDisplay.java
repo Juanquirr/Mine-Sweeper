@@ -19,8 +19,7 @@ public class SwingGameplayDisplay extends JPanel implements GameDisplay {
     }
 
     private SwingBoardDisplay createBoardDisplay() {
-        SwingBoardDisplay swingBoardDisplay = new SwingBoardDisplay();
-        return swingBoardDisplay;
+        return new SwingBoardDisplay();
     }
 
     private JPanel createToolbar() {
@@ -31,7 +30,7 @@ public class SwingGameplayDisplay extends JPanel implements GameDisplay {
     }
 
     private JButton creteFinalizeButton() {
-        this.finalizeButton = new JButton("Finalize");
+        this.finalizeButton = new JButton("Return");
         return finalizeButton;
     }
 

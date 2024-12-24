@@ -1,5 +1,6 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
+import software.ulpgc.minesweeper.apps.windows.view.customization.Colors;
 import software.ulpgc.minesweeper.architecture.model.Level;
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
 
@@ -14,8 +15,15 @@ import java.util.List;
 public class SwingBoardDisplay extends JPanel implements BoardDisplay {
     private final List<PaintOrder> orders;
     private Click click = Click.NULL;
+    private final HashMap<Integer, Colors> colors;
 
     public SwingBoardDisplay() {
+        this.colors = new HashMap<>();
+        this.colors.put(1, Colors.ONE);
+        this.colors.put(2, Colors.TWO);
+        this.colors.put(3, Colors.THREE);
+        this.colors.put(4, Colors.FOUR);
+        this.colors.put(null, Colors.ONE);
         setLayout(new BorderLayout());
         this.orders = new ArrayList<>();
         this.addMouseListener(createMouseListener());
@@ -37,7 +45,7 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
             g.fillRect(p.x(), p.y(), p.width(), p.height());
             g.setColor(Color.RED);
             g.drawRect(p.x(), p.y(), p.width(), p.height());
-            g.setColor(Color.BLACK);
+            g.setColor(this.colors.get(p.number()).getColor());
             if (p.number() != null) g.drawString(String.valueOf(p.number()), p.x() + CELL_SIZE / 2, p.y() + CELL_SIZE / 2);
         });
     }

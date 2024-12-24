@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 public class Board {
     private final Level level;
     private final List<Cell> cells;
+
     private final Set<Cell.Position> mines;
 
     public Board(Level level) {
@@ -77,5 +78,9 @@ public class Board {
 
     private int randomHeight() {
         return new Random().nextInt(level().height());
+    }
+
+    public Set<Cell.Position> mines() {
+        return new HashSet<>(mines);
     }
 }

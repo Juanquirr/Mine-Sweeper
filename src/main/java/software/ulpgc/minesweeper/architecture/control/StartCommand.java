@@ -1,6 +1,7 @@
 package software.ulpgc.minesweeper.architecture.control;
 
 import software.ulpgc.minesweeper.architecture.model.BoardBuilder;
+import software.ulpgc.minesweeper.architecture.model.Game;
 import software.ulpgc.minesweeper.architecture.view.GameDisplay;
 import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
 
@@ -16,9 +17,11 @@ public class StartCommand implements Command {
     @Override
     public void execute() {
         presenter.show(
-                new BoardBuilder()
-                        .level(mainMenuPanel.difficultyDialog().get())
-                        .build()
+                new Game(
+                        new BoardBuilder()
+                                .level(mainMenuPanel.difficultyDialog().get())
+                                .build()
+                        )
         );
     }
 }

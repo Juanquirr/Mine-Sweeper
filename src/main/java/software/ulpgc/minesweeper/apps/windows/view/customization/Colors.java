@@ -6,7 +6,7 @@ public enum Colors {
     ONE(Color.BLUE),
     TWO(Color.GREEN),
     THREE(Color.MAGENTA),
-    FOUR(Color.orange);
+    FOUR(Color.ORANGE);
 
     private final Color color;
 

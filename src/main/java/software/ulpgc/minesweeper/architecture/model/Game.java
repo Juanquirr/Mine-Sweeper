@@ -1,18 +1,26 @@
 package software.ulpgc.minesweeper.architecture.model;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private final List<Interaction> interactions;
-    public final GameState gameState;
-    public final GameResult gameResult;
+    private final Board board;
+    private final GameState gameState;
+    private final GameResult gameResult;
 
-    public Game() {
+    public Game(Board board) {
         this.interactions = new ArrayList<>();
+        this.board = board;
         this.gameState = GameState.Unbegun;
         this.gameResult = null;
+    }
+
+    public Game(Board board, GameState gameState, GameResult gameResult) {
+        this.interactions = new ArrayList<>();
+        this.board = board;
+        this.gameState = gameState;
+        this.gameResult = gameState.equals(GameState.Unbegun) ? null : gameResult;
     }
 
     public GameState gameState() {
@@ -32,7 +40,11 @@ public class Game {
         return this;
     }
 
-    public record Interaction(Cell.Position position, Instant instant) {}
+    public Board board() {
+        return board;
+    }
+
+    public record Interaction(Cell.Position position, int seconds) {}
 
     public enum GameState {
         Unbegun, Begun
@@ -41,4 +53,5 @@ public class Game {
     public enum GameResult {
         Won, Lost
     }
+
 }

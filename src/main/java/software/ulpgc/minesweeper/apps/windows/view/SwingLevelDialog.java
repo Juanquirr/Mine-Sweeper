@@ -23,12 +23,12 @@ public class SwingLevelDialog extends JPanel implements LevelDialog {
     }
 
     private JToggleButton[] createButtons() {
-        CustomizedButton easyButton = new CustomizedButton("BEGINNER");
+        CustomizedButton easyButton = new CustomizedButton().personalizeButton("BEGINNER");
         ButtonStyler.applySelectedButtonStyle(easyButton);
         return new JToggleButton[]{
                 easyButton,
-                new CustomizedButton("INTERMEDIATE"),
-                new CustomizedButton("EXPERT"),
+                new CustomizedButton().personalizeButton("INTERMEDIATE"),
+                new CustomizedButton().personalizeButton("EXPERT"),
         };
     }
 
