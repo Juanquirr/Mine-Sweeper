@@ -40,17 +40,12 @@ public class Board {
             cells.add(
                     new Cell() {
                         private final CellState cellState = CellState.NonSelected;
-                        private final Cell.Position position = pos;
 
                         @Override
-                        public CellState cellState() {
-                            return cellState;
-                        }
+                        public CellState cellState() { return cellState; }
 
                         @Override
-                        public Position position() {
-                            return pos;
-                        }
+                        public Position position() { return pos; }
                     }
             );
         }

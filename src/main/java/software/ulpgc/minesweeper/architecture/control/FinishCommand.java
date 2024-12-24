@@ -1,20 +1,20 @@
 package software.ulpgc.minesweeper.architecture.control;
 
-import software.ulpgc.minesweeper.architecture.view.GamePlayPanel;
+import software.ulpgc.minesweeper.architecture.view.GameDisplay;
 import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
 
 public class FinishCommand implements Command {
     private final MainMenuPanel mainMenuPanel;
-    private final GamePlayPanel gameplayPanel;
+    private final GameDisplay gameplayDisplay;
 
-    public FinishCommand(MainMenuPanel mainMenuPanel, GamePlayPanel gameplayPanel) {
+    public FinishCommand(MainMenuPanel mainMenuPanel, GameDisplay gameplayDisplay) {
         this.mainMenuPanel = mainMenuPanel;
-        this.gameplayPanel = gameplayPanel;
+        this.gameplayDisplay = gameplayDisplay;
     }
 
     @Override
     public void execute() {
-        gameplayPanel.hidePanel();
+        gameplayDisplay.stopGame();
         mainMenuPanel.showPanel();
     }
 }

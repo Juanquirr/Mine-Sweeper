@@ -8,9 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 public class SwingBoardDisplay extends JPanel implements BoardDisplay {
@@ -18,6 +16,7 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
     private Click click = Click.NULL;
 
     public SwingBoardDisplay() {
+        setLayout(new BorderLayout());
         this.orders = new ArrayList<>();
         this.addMouseListener(createMouseListener());
     }
@@ -38,6 +37,8 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
             g.fillRect(p.x(), p.y(), p.width(), p.height());
             g.setColor(Color.RED);
             g.drawRect(p.x(), p.y(), p.width(), p.height());
+            g.setColor(Color.BLACK);
+            if (p.number() != null) g.drawString(String.valueOf(p.number()), p.x() + CELL_SIZE / 2, p.y() + CELL_SIZE / 2);
         });
     }
 
@@ -48,25 +49,23 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
 
     @Override
     public void paint(PaintOrder... orders) {
-        /*if (orders.length == 1) {
-            PaintOrder order = orders[0];
-            this.orders.add(order);
-            repaint(order.x(), order.y(), order.width(), order.height());
-        } else {
-            this.orders.clear();
-            Collections.addAll(this.orders, orders);
-            repaint();
-        }*/
-        Collections.addAll(this.orders, orders);
-
-        // Repaint sobre las áreas de todas las órdenes recibidas
+        if (this.orders.isEmpty()) Collections.addAll(this.orders, orders);
         for (PaintOrder order : orders) {
-            repaint(order.x(), order.y(), order.width(), order.height());
+            this.orders.set(((order.y() / CELL_SIZE) * (getPreferredSize().width / CELL_SIZE)) + (order.x() / CELL_SIZE), order);
         }
+        repaint();
     }
 
     @Override
     public void on(Click click) {
         this.click = click;
+    }
+
+    @Override
+    public void clear() {
+        this.orders.clear();
+        this.orders.add(new PaintOrder(Color.BLACK, 0, 0, getWidth(), getHeight(), null));
+        repaint();
+        this.orders.clear();
     }
 }

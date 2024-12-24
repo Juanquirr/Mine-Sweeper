@@ -1,13 +1,11 @@
 package software.ulpgc.minesweeper.architecture.control;
 
-import software.ulpgc.minesweeper.apps.windows.view.SwingBoardDisplay;
 import software.ulpgc.minesweeper.architecture.model.Board;
 import software.ulpgc.minesweeper.architecture.model.BoardExplorer;
 import software.ulpgc.minesweeper.architecture.model.Cell;
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class BoardPresenter {
@@ -29,32 +27,65 @@ public class BoardPresenter {
             BoardDisplay.PaintOrder[] array = e.safeCells().stream()
                     .map(
                             p -> new BoardDisplay.PaintOrder(
-                                    Color.GREEN,
+                                    Color.GRAY,
                                     p.row() * BoardDisplay.CELL_SIZE,
                                     p.column() * BoardDisplay.CELL_SIZE,
                                     BoardDisplay.CELL_SIZE,
-                                    BoardDisplay.CELL_SIZE
+                                    BoardDisplay.CELL_SIZE,
+                                    null
+                            )
+                    )
+                    .toArray(BoardDisplay.PaintOrder[]::new);
+            BoardDisplay.PaintOrder[] array1 = e.edges().stream()
+                    .map(
+                            p -> new BoardDisplay.PaintOrder(
+                                    Color.GRAY,
+                                    p.row() * BoardDisplay.CELL_SIZE,
+                                    p.column() * BoardDisplay.CELL_SIZE,
+                                    BoardDisplay.CELL_SIZE,
+                                    BoardDisplay.CELL_SIZE,
+                                    countNearMines(p)
                             )
                     )
                     .toArray(BoardDisplay.PaintOrder[]::new);
             boardDisplay.paint(
-                    array
+                    array.length != 0 ? array :
+                            new BoardDisplay.PaintOrder[]{
+                            new BoardDisplay.PaintOrder(
+                                    Color.RED,
+                                    position.row() * BoardDisplay.CELL_SIZE,
+                                    position.column() * BoardDisplay.CELL_SIZE,
+                                    BoardDisplay.CELL_SIZE,
+                                    BoardDisplay.CELL_SIZE,
+                                    null
+                            )}
+            );
+            boardDisplay.paint(
+                    array1
             );
         };
     }
 
+    private Integer countNearMines(Cell.Position p) {
+        return Math.toIntExact(this.board.cellNeighborsOf(p).stream()
+                .filter(n -> this.board.hasMineIn(n))
+                .count());
+    }
+
     public void show(Board board) {
         this.board = board;
+        boardDisplay.clear();
         boardDisplay.adjustDimensionTo(board.level().size());
         boardDisplay.paint(
                 IntStream.range(0, board.level().width() * board.level().height())
                         .mapToObj(
                                 i -> new BoardDisplay.PaintOrder(
-                                        Color.GRAY,
-                                        BoardDisplay.CELL_SIZE * (i / board.level().width()),
+                                        Color.LIGHT_GRAY,
                                         BoardDisplay.CELL_SIZE * (i % board.level().width()),
+                                        BoardDisplay.CELL_SIZE * (i / board.level().width()),
                                         BoardDisplay.CELL_SIZE,
-                                        BoardDisplay.CELL_SIZE
+                                        BoardDisplay.CELL_SIZE,
+                                        null
                                 )
                         )
                         .toArray(BoardDisplay.PaintOrder[]::new)

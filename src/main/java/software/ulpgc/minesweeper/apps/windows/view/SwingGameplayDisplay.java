@@ -1,17 +1,17 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
-import software.ulpgc.minesweeper.architecture.view.GamePlayPanel;
+import software.ulpgc.minesweeper.architecture.view.GameDisplay;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SwingGameplayPanel extends JPanel implements GamePlayPanel {
+public class SwingGameplayDisplay extends JPanel implements GameDisplay {
     private final Chronometer timer;
     private final SwingBoardDisplay boardDisplay;
     private JButton finalizeButton;
 
-    public SwingGameplayPanel() {
+    public SwingGameplayDisplay() {
         this.timer = new Chronometer();
         this.setLayout(new BorderLayout());
         this.add(BorderLayout.NORTH, createToolbar());
@@ -32,18 +32,17 @@ public class SwingGameplayPanel extends JPanel implements GamePlayPanel {
 
     private JButton creteFinalizeButton() {
         this.finalizeButton = new JButton("Finalize");
-        finalizeButton.addActionListener(e -> hidePanel());
         return finalizeButton;
     }
 
     @Override
-    public void hidePanel() {
-        this.setVisible(false);
+    public void startGame() {
+
     }
 
     @Override
-    public void showPanel() {
-        this.setVisible(true);
+    public void stopGame() {
+        setVisible(false);
     }
 
     @Override

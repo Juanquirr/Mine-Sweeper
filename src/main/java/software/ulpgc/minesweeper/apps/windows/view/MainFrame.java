@@ -1,7 +1,8 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.architecture.control.Command;
-import software.ulpgc.minesweeper.architecture.view.GamePlayPanel;
+import software.ulpgc.minesweeper.architecture.model.Level;
+import software.ulpgc.minesweeper.architecture.view.GameDisplay;
 import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
 
 import javax.swing.*;
@@ -11,13 +12,13 @@ import java.util.Map;
 
 public class MainFrame extends JFrame {
     private final SwingMainMenuPanel mainMenuPanel;
-    private final SwingGameplayPanel gameplayPanel;
+    private final SwingGameplayDisplay gameplayPanel;
     private final Map<String, Command> commands;
 
     private MainFrame() throws HeadlessException {
         this.commands = new HashMap<>();
         setTitle("Minesweeper");
-        setResizable(true);
+        setResizable(false);
         CardLayout layout = new CardLayout();
         getContentPane().setLayout(layout);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -40,11 +41,11 @@ public class MainFrame extends JFrame {
         return this;
     }
 
-    private SwingGameplayPanel createGameplayPanel() {
-        SwingGameplayPanel swingGameplayPanel = new SwingGameplayPanel();
+    private SwingGameplayDisplay createGameplayPanel() {
+        SwingGameplayDisplay swingGameplayPanel = new SwingGameplayDisplay();
         swingGameplayPanel.finalizeButton().addActionListener(e -> {
             commands.get("finish").execute();
-            ((SwingBoardDisplay) swingGameplayPanel.boardDisplay()).setPreferredSize(new Dimension(1, 1));
+            swingGameplayPanel.boardDisplay().adjustDimensionTo(new Level.Size(1, 1));
             ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "LOADING");
             pack(); // Ajustar el tamaño del frame
             setLocationRelativeTo(null);
@@ -68,7 +69,7 @@ public class MainFrame extends JFrame {
         return mainMenuPanel;
     }
 
-    public GamePlayPanel gameplayPanel() {
+    public GameDisplay gameplayPanel() {
         return gameplayPanel;
     }
 

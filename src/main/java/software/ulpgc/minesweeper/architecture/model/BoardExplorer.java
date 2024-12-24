@@ -21,7 +21,7 @@ public class BoardExplorer {
     }
 
     private void explore(Board board, Cell.Position startPosition, Set<Cell.Position> visited) {
-        if (visited.contains(startPosition)) return;
+        if (visited.contains(startPosition) || board.hasMineIn(startPosition)) return;
 
         visited.add(startPosition);
 
