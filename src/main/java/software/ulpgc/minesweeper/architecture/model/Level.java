@@ -26,4 +26,7 @@ public enum Level {
     public int width() {
         return width;
     }
+     public Size size() { return new Size(width, height); }
+
+    public record Size(int width, int height) {}
 }

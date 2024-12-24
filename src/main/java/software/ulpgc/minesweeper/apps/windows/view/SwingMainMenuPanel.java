@@ -1,18 +1,18 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
-import software.ulpgc.minesweeper.architecture.view.LoadingPanel;
+import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-public class SwingLoadingPanel extends JPanel implements LoadingPanel {
+public class SwingMainMenuPanel extends JPanel implements MainMenuPanel {
 
     private final Font customFont;
     private final JButton startButton;
-    private final SwingDifficultyDialog difficultyDialog;
+    private final SwingLevelDialog difficultyDialog;
 
-    public SwingLoadingPanel() {
+    public SwingMainMenuPanel() {
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
 
@@ -23,10 +23,9 @@ public class SwingLoadingPanel extends JPanel implements LoadingPanel {
         add(BorderLayout.SOUTH, toolbar(this.startButton = createStartButton()));
     }
 
-    private JPanel createCenterPanel(SwingDifficultyDialog difficultyDialog) {
+    private JPanel createCenterPanel(SwingLevelDialog difficultyDialog) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(Box.createVerticalStrut(300));
         panel.add(difficultyDialog);
         return panel;
     }
@@ -81,26 +80,26 @@ public class SwingLoadingPanel extends JPanel implements LoadingPanel {
         return button;
     }
 
-    private SwingDifficultyDialog createDifficultyDialog() {
-        return new SwingDifficultyDialog();
+    private SwingLevelDialog createDifficultyDialog() {
+        return new SwingLevelDialog();
     }
 
     public JButton startButton() {
         return startButton;
     }
 
-    public SwingDifficultyDialog difficultyDialog() {
+    public SwingLevelDialog difficultyDialog() {
         return difficultyDialog;
     }
 
     @Override
-    public LoadingPanel showPanel() {
+    public MainMenuPanel showPanel() {
         setVisible(true);
         return this;
     }
 
     @Override
-    public LoadingPanel hidePanel() {
+    public MainMenuPanel hidePanel() {
         setVisible(false);
         return this;
     }

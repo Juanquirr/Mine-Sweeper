@@ -1,27 +1,25 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
-import software.ulpgc.minesweeper.architecture.control.BoardPresenter;
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
+import software.ulpgc.minesweeper.architecture.view.GamePlayPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SwingGameplayPanel extends JPanel implements BoardDisplay {
+public class SwingGameplayPanel extends JPanel implements GamePlayPanel {
     private final Chronometer timer;
-    private final BoardDisplay boardDisplay;
-    private BoardPresenter presenter;
+    private final SwingBoardDisplay boardDisplay;
     private JButton finalizeButton;
 
     public SwingGameplayPanel() {
         this.timer = new Chronometer();
         this.setLayout(new BorderLayout());
         this.add(BorderLayout.NORTH, createToolbar());
-        this.add(BorderLayout.CENTER, (Component) (this.boardDisplay = createBoardDisplay()));
+        this.add(BorderLayout.CENTER, this.boardDisplay = createBoardDisplay());
     }
 
-    private BoardDisplay createBoardDisplay() {
-        BoardDisplay swingBoardDisplay = new SwingBoardDisplay();
-        this.presenter = new BoardPresenter(swingBoardDisplay);
+    private SwingBoardDisplay createBoardDisplay() {
+        SwingBoardDisplay swingBoardDisplay = new SwingBoardDisplay();
         return swingBoardDisplay;
     }
 
@@ -38,25 +36,17 @@ public class SwingGameplayPanel extends JPanel implements BoardDisplay {
         return finalizeButton;
     }
 
-    private void hidePanel() {
+    @Override
+    public void hidePanel() {
         this.setVisible(false);
-
     }
 
     @Override
-    public void paint(PaintOrder paintOrder) {
-
+    public void showPanel() {
+        this.setVisible(true);
     }
 
     @Override
-    public void on(Click click) {
-
-    }
-
-    public BoardPresenter presenter() {
-        return presenter;
-    }
-
     public BoardDisplay boardDisplay() {
         return boardDisplay;
     }

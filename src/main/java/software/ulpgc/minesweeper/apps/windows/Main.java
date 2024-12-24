@@ -10,8 +10,8 @@ public class Main {
         MainFrame mainFrame = MainFrame.create();
         BoardPresenter presenter = new BoardPresenter(mainFrame.gameplayPanel().boardDisplay());
         mainFrame
-                .addCommand("start_game", new StartCommand(mainFrame.loadingPanel(), mainFrame.gameplayPanel().presenter()))
-                .addCommand("finish", new FinishCommand(mainFrame.loadingPanel(), mainFrame.gameplayPanel()))
+                .addCommand("start_game", new StartCommand(mainFrame.mainMenuPanel(), mainFrame.gameplayPanel(), presenter))
+                .addCommand("finish", new FinishCommand(mainFrame.mainMenuPanel(), mainFrame.gameplayPanel()))
                 .setVisible(true);
     }
 }

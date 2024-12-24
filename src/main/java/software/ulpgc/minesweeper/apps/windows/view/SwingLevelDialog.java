@@ -1,17 +1,17 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.architecture.model.Level;
-import software.ulpgc.minesweeper.architecture.view.DifficultyDialog;
+import software.ulpgc.minesweeper.architecture.view.LevelDialog;
 import software.ulpgc.minesweeper.apps.windows.view.customization.ButtonStyler;
 import software.ulpgc.minesweeper.apps.windows.view.customization.CustomizedButton;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SwingDifficultyDialog extends JPanel implements DifficultyDialog {
+public class SwingLevelDialog extends JPanel implements LevelDialog {
     private final ButtonGroup group;
 
-    public SwingDifficultyDialog() {
+    public SwingLevelDialog() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.darkGray);
         this.group = new ButtonGroup();

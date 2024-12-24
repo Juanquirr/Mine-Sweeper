@@ -1,6 +1,8 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.architecture.control.Command;
+import software.ulpgc.minesweeper.architecture.view.GamePlayPanel;
+import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,23 +10,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainFrame extends JFrame {
-    private final SwingLoadingPanel loadingPanel;
+    private final SwingMainMenuPanel mainMenuPanel;
     private final SwingGameplayPanel gameplayPanel;
     private final Map<String, Command> commands;
 
     private MainFrame() throws HeadlessException {
         this.commands = new HashMap<>();
         setTitle("Minesweeper");
-        setResizable(false);
+        setResizable(true);
         CardLayout layout = new CardLayout();
         getContentPane().setLayout(layout);
-        setSize(1000, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
         add(this.gameplayPanel = createGameplayPanel(), "GAME");
-        add(this.loadingPanel = createLoadingPanel(), "LOADING");
+        add(this.mainMenuPanel = createMainMenuPanel(), "LOADING");
+
         layout.show(getContentPane(), "GAME");
         layout.show(getContentPane(), "LOADING");
+        pack();
     }
 
     public static MainFrame create() {
@@ -38,21 +42,33 @@ public class MainFrame extends JFrame {
 
     private SwingGameplayPanel createGameplayPanel() {
         SwingGameplayPanel swingGameplayPanel = new SwingGameplayPanel();
-        swingGameplayPanel.finalizeButton().addActionListener(e -> commands.get("finish").execute());
+        swingGameplayPanel.finalizeButton().addActionListener(e -> {
+            commands.get("finish").execute();
+            ((SwingBoardDisplay) swingGameplayPanel.boardDisplay()).setPreferredSize(new Dimension(1, 1));
+            ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "LOADING");
+            pack(); // Ajustar el tamaño del frame
+            setLocationRelativeTo(null);
+        });
         return swingGameplayPanel;
     }
 
-    private SwingLoadingPanel createLoadingPanel() {
-        SwingLoadingPanel loadingPanel = new SwingLoadingPanel();
-        loadingPanel.startButton().addActionListener(e -> commands.get("start_game").execute());
+
+    private SwingMainMenuPanel createMainMenuPanel() {
+        SwingMainMenuPanel loadingPanel = new SwingMainMenuPanel();
+        loadingPanel.startButton().addActionListener(e -> {
+            commands.get("start_game").execute();
+            ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "GAME");
+            pack(); // Ajustar el tamaño del frame
+            setLocationRelativeTo(null);
+        });
         return loadingPanel;
     }
 
-    public SwingLoadingPanel loadingPanel() {
-        return loadingPanel;
+    public MainMenuPanel mainMenuPanel() {
+        return mainMenuPanel;
     }
 
-    public SwingGameplayPanel gameplayPanel() {
+    public GamePlayPanel gameplayPanel() {
         return gameplayPanel;
     }
 

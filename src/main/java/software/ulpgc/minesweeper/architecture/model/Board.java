@@ -68,6 +68,10 @@ public class Board {
                 .collect(Collectors.toSet()));
     }
 
+    public boolean hasMineIn(Cell.Position position) {
+        return mines.contains(position);
+    }
+
     private static int[][] getDeltas() {
         return new int[][]{
                 {-1, -1}, {-1, 0}, {-1, 1},

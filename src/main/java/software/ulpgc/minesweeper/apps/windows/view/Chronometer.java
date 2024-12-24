@@ -13,7 +13,7 @@ public class Chronometer extends JPanel {
     public Chronometer() {
         add(this.label = new JLabel("00:00"));
         this.label.setBorder(new LineBorder(new Color(0,0,10), 4));
-        this.label.setFont(new Font("Arial", Font.PLAIN, 26));
+        this.label.setFont(new Font("Arial", Font.PLAIN, 20));
         this.timer = new Timer(1000, e -> {
             this.label.setText(normalize());
             counter.getAndIncrement();

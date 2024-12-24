@@ -1,22 +1,20 @@
 package software.ulpgc.minesweeper.architecture.control;
 
-import software.ulpgc.minesweeper.apps.windows.view.SwingGameplayPanel;
-import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
-import software.ulpgc.minesweeper.architecture.view.LoadingPanel;
-import software.ulpgc.minesweeper.apps.windows.view.SwingBoardDisplay;
+import software.ulpgc.minesweeper.architecture.view.GamePlayPanel;
+import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
 
 public class FinishCommand implements Command {
-    private final LoadingPanel loadingPanel;
-    private final BoardDisplay boardDisplay;
+    private final MainMenuPanel mainMenuPanel;
+    private final GamePlayPanel gameplayPanel;
 
-    public FinishCommand(LoadingPanel loadingPanel, BoardDisplay gameplayPanel) {
-        this.loadingPanel = loadingPanel;
-        this.boardDisplay = gameplayPanel;
+    public FinishCommand(MainMenuPanel mainMenuPanel, GamePlayPanel gameplayPanel) {
+        this.mainMenuPanel = mainMenuPanel;
+        this.gameplayPanel = gameplayPanel;
     }
 
     @Override
     public void execute() {
-        ((SwingGameplayPanel) boardDisplay).setVisible(false);
-        loadingPanel.showPanel();
+        gameplayPanel.hidePanel();
+        mainMenuPanel.showPanel();
     }
 }
