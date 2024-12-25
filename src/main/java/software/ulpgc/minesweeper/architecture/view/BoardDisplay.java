@@ -18,7 +18,7 @@ public interface BoardDisplay {
         void offset(int xOffset, int yOffset);
     }
 
-    public record PaintOrder(Color color, int x, int y, int width, int height, Integer number) {
+    public record PaintOrder(Color color, int x, int y, Integer number) {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;

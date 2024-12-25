@@ -33,7 +33,7 @@ public class BoardPresenter {
             else this.game.add(new Game.Interaction(position, counter.get()));
             this.game.board().initializeMinesExcluding(position);
             BoardExplorer e = boardExplorer.exploreFrom(this.game.board(), position);
-            BoardDisplay.PaintOrder[] array = e.safeCells().stream()
+            BoardDisplay.PaintOrder[] arrayOfSafeCells = e.safeCells().stream()
                     .map(
                             p -> new BoardDisplay.PaintOrder(
                                     new Color(81, 54, 26),
@@ -45,7 +45,7 @@ public class BoardPresenter {
                             )
                     )
                     .toArray(BoardDisplay.PaintOrder[]::new);
-            BoardDisplay.PaintOrder[] array1 = e.edges().stream()
+            BoardDisplay.PaintOrder[] arrayOfEdgeCells = e.edges().stream()
                     .map(
                             p -> new BoardDisplay.PaintOrder(
                                     new Color(101, 67, 33),
@@ -57,21 +57,8 @@ public class BoardPresenter {
                             )
                     )
                     .toArray(BoardDisplay.PaintOrder[]::new);
-            boardDisplay.paint(
-                    array.length != 0 ? array :
-                            new BoardDisplay.PaintOrder[]{
-                            new BoardDisplay.PaintOrder(
-                                    null, // was Color.RED
-                                    position.row() * BoardDisplay.CELL_SIZE,
-                                    position.column() * BoardDisplay.CELL_SIZE,
-                                    BoardDisplay.CELL_SIZE,
-                                    BoardDisplay.CELL_SIZE,
-                                    null
-                            )}
-            );
-            boardDisplay.paint(
-                    array1
-            );
+            boardDisplay.paint(arrayOfSafeCells);
+            boardDisplay.paint(arrayOfEdgeCells);
             if (game.board().hasMineIn(position)) {
                 BoardDisplay.PaintOrder[] mines = this.game.board().mines().stream()
                         .map(
