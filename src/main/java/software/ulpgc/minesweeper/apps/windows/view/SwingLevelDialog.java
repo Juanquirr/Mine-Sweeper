@@ -15,7 +15,7 @@ public class SwingLevelDialog extends JPanel implements LevelDialog {
         this.group = new ButtonGroup();
         for (JToggleButton button : createButtons()) {
             add(button);
-            button.addActionListener(_ -> updateButtonStyles(button));
+            button.addActionListener(x -> updateButtonStyles(button));
             group.add(button);
         }
     }

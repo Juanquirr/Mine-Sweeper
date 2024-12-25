@@ -43,7 +43,7 @@ public class MainFrame extends JFrame {
 
     private SwingGameplayDisplay createGameplayPanel() {
         SwingGameplayDisplay swingGameplayPanel = new SwingGameplayDisplay();
-        swingGameplayPanel.finalizeButton().addActionListener(_ -> {
+        swingGameplayPanel.finalizeButton().addActionListener(x -> {
             commands.get("finish").execute();
             swingGameplayPanel.boardDisplay().adjustDimensionTo(new Level.Size(1, 1));
             ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "LOADING");
@@ -56,7 +56,7 @@ public class MainFrame extends JFrame {
 
     private SwingMainMenuPanel createMainMenuPanel() {
         SwingMainMenuPanel loadingPanel = new SwingMainMenuPanel();
-        loadingPanel.startButton().addActionListener(_ -> {
+        loadingPanel.startButton().addActionListener(x -> {
             commands.get("start_game").execute();
             ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "GAME");
             pack();

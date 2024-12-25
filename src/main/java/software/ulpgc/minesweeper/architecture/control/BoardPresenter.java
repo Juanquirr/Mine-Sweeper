@@ -41,7 +41,7 @@ public class BoardPresenter {
 
     private BoardDisplay.PaintOrder[] getPaintOrderArrayFrom(Cell.Position position) {
         boardExplorer.exploreFrom(this.game.board(), position);
-        return Stream.of(
+        return !game.board().hasMineIn(position) ? Stream.of(
                 boardExplorer.safeCells().stream()
                         .map(
                                 p -> createPaintOrderAt(integerToPixelPosition(p), Color.SafeCell, null)
@@ -49,12 +49,13 @@ public class BoardPresenter {
                 boardExplorer.edges().stream()
                         .map(
                                 p -> createPaintOrderAt(integerToPixelPosition(p), Color.EdgeCell, boardExplorer.countNearMines(game.board(), p))
-                        ),
+                        )).flatMap(s -> s).toArray(BoardDisplay.PaintOrder[]::new) :
+
                 this.game.board().mines().stream()
                         .map(
-                                p -> createPaintOrderAt(p, Color.MineCell, null)
-                        )
-                ).flatMap(s -> s).toArray(BoardDisplay.PaintOrder[]::new);
+                                p -> createPaintOrderAt(integerToPixelPosition(p), Color.MineCell, null)
+                        ).toArray(BoardDisplay.PaintOrder[]::new);
+
     }
 
     private Cell.Position integerToPixelPosition(Cell.Position p) {
