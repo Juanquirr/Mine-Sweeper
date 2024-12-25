@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
 
         layout.show(getContentPane(), "GAME");
         layout.show(getContentPane(), "LOADING");
-        pack();
+        setSize(400, 400);
     }
 
     public static MainFrame create() {
@@ -43,11 +43,11 @@ public class MainFrame extends JFrame {
 
     private SwingGameplayDisplay createGameplayPanel() {
         SwingGameplayDisplay swingGameplayPanel = new SwingGameplayDisplay();
-        swingGameplayPanel.finalizeButton().addActionListener(e -> {
+        swingGameplayPanel.finalizeButton().addActionListener(_ -> {
             commands.get("finish").execute();
             swingGameplayPanel.boardDisplay().adjustDimensionTo(new Level.Size(1, 1));
             ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "LOADING");
-            pack(); // Ajustar el tamaño del frame
+            setSize(400, 400);
             setLocationRelativeTo(null);
         });
         return swingGameplayPanel;
@@ -56,10 +56,10 @@ public class MainFrame extends JFrame {
 
     private SwingMainMenuPanel createMainMenuPanel() {
         SwingMainMenuPanel loadingPanel = new SwingMainMenuPanel();
-        loadingPanel.startButton().addActionListener(e -> {
+        loadingPanel.startButton().addActionListener(_ -> {
             commands.get("start_game").execute();
             ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "GAME");
-            pack(); // Ajustar el tamaño del frame
+            pack();
             setLocationRelativeTo(null);
         });
         return loadingPanel;

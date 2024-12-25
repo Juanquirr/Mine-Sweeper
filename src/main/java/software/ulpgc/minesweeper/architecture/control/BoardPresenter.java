@@ -36,7 +36,7 @@ public class BoardPresenter {
             BoardDisplay.PaintOrder[] array = e.safeCells().stream()
                     .map(
                             p -> new BoardDisplay.PaintOrder(
-                                    Color.GRAY,
+                                    new Color(81, 54, 26),
                                     p.row() * BoardDisplay.CELL_SIZE,
                                     p.column() * BoardDisplay.CELL_SIZE,
                                     BoardDisplay.CELL_SIZE,
@@ -48,7 +48,7 @@ public class BoardPresenter {
             BoardDisplay.PaintOrder[] array1 = e.edges().stream()
                     .map(
                             p -> new BoardDisplay.PaintOrder(
-                                    Color.GRAY,
+                                    new Color(101, 67, 33),
                                     p.row() * BoardDisplay.CELL_SIZE,
                                     p.column() * BoardDisplay.CELL_SIZE,
                                     BoardDisplay.CELL_SIZE,
@@ -61,7 +61,7 @@ public class BoardPresenter {
                     array.length != 0 ? array :
                             new BoardDisplay.PaintOrder[]{
                             new BoardDisplay.PaintOrder(
-                                    Color.RED,
+                                    null, // was Color.RED
                                     position.row() * BoardDisplay.CELL_SIZE,
                                     position.column() * BoardDisplay.CELL_SIZE,
                                     BoardDisplay.CELL_SIZE,
@@ -76,7 +76,7 @@ public class BoardPresenter {
                 BoardDisplay.PaintOrder[] mines = this.game.board().mines().stream()
                         .map(
                                 mine -> new BoardDisplay.PaintOrder(
-                                        Color.RED,
+                                        new Color(178, 34, 34),
                                         mine.row() * BoardDisplay.CELL_SIZE,
                                         mine.column() * BoardDisplay.CELL_SIZE,
                                         BoardDisplay.CELL_SIZE,
@@ -116,7 +116,7 @@ public class BoardPresenter {
                 IntStream.range(0, this.game.board().level().width() * this.game.board().level().height())
                         .mapToObj(
                                 i -> new BoardDisplay.PaintOrder(
-                                        Color.LIGHT_GRAY,
+                                        new Color(0, 100, 0),
                                         BoardDisplay.CELL_SIZE * (i % this.game.board().level().width()),
                                         BoardDisplay.CELL_SIZE * (i / this.game.board().level().width()),
                                         BoardDisplay.CELL_SIZE,

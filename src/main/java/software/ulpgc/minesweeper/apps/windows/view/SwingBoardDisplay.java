@@ -43,7 +43,7 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
         orders.forEach(p -> {
             g.setColor(p.color());
             g.fillRect(p.x(), p.y(), p.width(), p.height());
-            g.setColor(Color.RED);
+            g.setColor(new Color(0, 128, 0));
             g.drawRect(p.x(), p.y(), p.width(), p.height());
             g.setColor(this.colors.get(p.number()).getColor());
             if (p.number() != null) g.drawString(String.valueOf(p.number()), p.x() + CELL_SIZE / 2, p.y() + CELL_SIZE / 2);

@@ -2,7 +2,6 @@ package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.architecture.model.Level;
 import software.ulpgc.minesweeper.architecture.view.LevelDialog;
-import software.ulpgc.minesweeper.apps.windows.view.customization.ButtonStyler;
 import software.ulpgc.minesweeper.apps.windows.view.customization.CustomizedButton;
 
 import javax.swing.*;
@@ -13,35 +12,32 @@ public class SwingLevelDialog extends JPanel implements LevelDialog {
 
     public SwingLevelDialog() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(Color.darkGray);
         this.group = new ButtonGroup();
         for (JToggleButton button : createButtons()) {
             add(button);
-            button.addActionListener(e -> updateButtonStyles(button));
+            button.addActionListener(_ -> updateButtonStyles(button));
             group.add(button);
         }
     }
 
     private JToggleButton[] createButtons() {
-        CustomizedButton easyButton = new CustomizedButton().personalizeButton("BEGINNER");
-        ButtonStyler.applySelectedButtonStyle(easyButton);
+        CustomizedButton beginnerButton = new CustomizedButton().personalizeButton("BEGINNER");
+        beginnerButton.setSelected(true);
         return new JToggleButton[]{
-                easyButton,
+                beginnerButton,
                 new CustomizedButton().personalizeButton("INTERMEDIATE"),
                 new CustomizedButton().personalizeButton("EXPERT"),
         };
     }
 
     private void updateButtonStyles(JToggleButton selectedButton) {
-        Font customFont = selectedButton.getFont();
         for (Component component : getComponents()) {
             if (component.equals(selectedButton)) {
-                ButtonStyler.applySelectedButtonStyle((CustomizedButton) component);
+                ((CustomizedButton) component).setSelected(true);
                 continue;
             }
-            ButtonStyler.applyNonSelectedButtonStyle((CustomizedButton) component);
+            ((CustomizedButton) component).setSelected(false);
         }
-
     }
 
     @Override
