@@ -44,4 +44,10 @@ public class BoardExplorer {
     public Set<Cell.Position> edges() {
         return new HashSet<>(edges);
     }
+
+    public Integer countNearMines(Board board, Cell.Position position) {
+        return Math.toIntExact(board.cellNeighborsOf(position).stream()
+                .filter(board::hasMineIn)
+                .count());
+    }
 }

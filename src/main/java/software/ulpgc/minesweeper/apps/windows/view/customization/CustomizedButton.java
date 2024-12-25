@@ -7,13 +7,9 @@ import java.awt.event.MouseEvent;
 
 public class CustomizedButton extends JToggleButton {
 
-    private final Color defaultColor = new Color(0, 144, 0);
-    private final Color hoverColor = new Color(0, 200, 50);
-    private final Color selectedColor = new Color(101, 67, 33);
-
     public CustomizedButton() {
-        setBackground(defaultColor);
-        setForeground(Color.WHITE);
+        setBackground(Color.DefaultButtonColor.getColor());
+        setForeground(Color.White.getColor());
         setFocusPainted(false);
         setBorderPainted(false);
         setContentAreaFilled(false);
@@ -23,14 +19,14 @@ public class CustomizedButton extends JToggleButton {
             @Override
             public void mouseEntered(MouseEvent e) {
                 if (!isSelected()) {
-                    setBackground(hoverColor);
+                    setBackground(Color.HoverButtonColor.getColor());
                 }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 if (!isSelected()) {
-                    setBackground(defaultColor);
+                    setBackground(Color.DefaultButtonColor.getColor());
                 }
             }
         });
@@ -41,8 +37,8 @@ public class CustomizedButton extends JToggleButton {
     @Override
     public void setSelected(boolean selected) {
         super.setSelected(selected);
-        if (selected) setBackground(selectedColor);
-        else setBackground(defaultColor);
+        if (selected) setBackground(Color.SelectedButtonColor.getColor());
+        else setBackground(Color.DefaultButtonColor.getColor());
     }
 
     public CustomizedButton personalizeButton(String text) {

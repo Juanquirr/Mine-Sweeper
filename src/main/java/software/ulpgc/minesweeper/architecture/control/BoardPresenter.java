@@ -1,17 +1,15 @@
 package software.ulpgc.minesweeper.architecture.control;
 
+import software.ulpgc.minesweeper.apps.windows.view.customization.Color;
 import software.ulpgc.minesweeper.architecture.model.BoardExplorer;
 import software.ulpgc.minesweeper.architecture.model.Cell;
 import software.ulpgc.minesweeper.architecture.model.Game;
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
 
-import java.awt.*;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class BoardPresenter {
     private final BoardDisplay boardDisplay;
@@ -28,55 +26,47 @@ public class BoardPresenter {
     private BoardDisplay.Click click() {
         return (xOffset, yOffset) -> {
             if (this.game.gameResult() != null) return;
-            Cell.Position position = new Cell.Position(xOffset / BoardDisplay.CELL_SIZE, yOffset / BoardDisplay.CELL_SIZE);
+            Cell.Position position = new Cell.Position(pixelToInteger(xOffset), pixelToInteger(yOffset));
             if (this.game.gameState().equals(Game.GameState.Unbegun)) beginGame();
             else this.game.add(new Game.Interaction(position, counter.get()));
             this.game.board().initializeMinesExcluding(position);
-            BoardExplorer e = boardExplorer.exploreFrom(this.game.board(), position);
-            BoardDisplay.PaintOrder[] arrayOfSafeCells = e.safeCells().stream()
-                    .map(
-                            p -> new BoardDisplay.PaintOrder(
-                                    new Color(81, 54, 26),
-                                    p.row() * BoardDisplay.CELL_SIZE,
-                                    p.column() * BoardDisplay.CELL_SIZE,
-                                    BoardDisplay.CELL_SIZE,
-                                    BoardDisplay.CELL_SIZE,
-                                    null
-                            )
-                    )
-                    .toArray(BoardDisplay.PaintOrder[]::new);
-            BoardDisplay.PaintOrder[] arrayOfEdgeCells = e.edges().stream()
-                    .map(
-                            p -> new BoardDisplay.PaintOrder(
-                                    new Color(101, 67, 33),
-                                    p.row() * BoardDisplay.CELL_SIZE,
-                                    p.column() * BoardDisplay.CELL_SIZE,
-                                    BoardDisplay.CELL_SIZE,
-                                    BoardDisplay.CELL_SIZE,
-                                    countNearMines(p)
-                            )
-                    )
-                    .toArray(BoardDisplay.PaintOrder[]::new);
-            boardDisplay.paint(arrayOfSafeCells);
-            boardDisplay.paint(arrayOfEdgeCells);
+            boardDisplay.paint(getPaintOrderArrayFrom(position));
             if (game.board().hasMineIn(position)) {
-                BoardDisplay.PaintOrder[] mines = this.game.board().mines().stream()
-                        .map(
-                                mine -> new BoardDisplay.PaintOrder(
-                                        new Color(178, 34, 34),
-                                        mine.row() * BoardDisplay.CELL_SIZE,
-                                        mine.column() * BoardDisplay.CELL_SIZE,
-                                        BoardDisplay.CELL_SIZE,
-                                        BoardDisplay.CELL_SIZE,
-                                        null
-                                )
-                        ).toArray(BoardDisplay.PaintOrder[]::new);
                 Game lostGame = new Game(this.game.board(), this.game.gameState(), Game.GameResult.Lost);
                 this.game.interactions().forEach(lostGame::add);
                 this.game = lostGame;
-                boardDisplay.paint(mines);
             }
         };
+    }
+
+    private BoardDisplay.PaintOrder[] getPaintOrderArrayFrom(Cell.Position position) {
+        boardExplorer.exploreFrom(this.game.board(), position);
+        return Stream.of(
+                boardExplorer.safeCells().stream()
+                        .map(
+                                p -> createPaintOrderAt(integerToPixelPosition(p), Color.SafeCell, null)
+                        ),
+                boardExplorer.edges().stream()
+                        .map(
+                                p -> createPaintOrderAt(integerToPixelPosition(p), Color.EdgeCell, boardExplorer.countNearMines(game.board(), p))
+                        ),
+                this.game.board().mines().stream()
+                        .map(
+                                p -> createPaintOrderAt(p, Color.MineCell, null)
+                        )
+                ).flatMap(s -> s).toArray(BoardDisplay.PaintOrder[]::new);
+    }
+
+    private Cell.Position integerToPixelPosition(Cell.Position p) {
+        return new Cell.Position(p.row() * BoardDisplay.CELL_SIZE, p.column() * BoardDisplay.CELL_SIZE);
+    }
+
+    private BoardDisplay.PaintOrder createPaintOrderAt(Cell.Position position, Color color, Integer number) {
+        return new PaintOrderBuilder().setPosition(position).setColor(color).setNumber(number).build();
+    }
+
+    private static int pixelToInteger(int offset) {
+        return offset / BoardDisplay.CELL_SIZE;
     }
 
     private void beginGame() {
@@ -89,12 +79,6 @@ public class BoardPresenter {
         }, 1000);
     }
 
-    private Integer countNearMines(Cell.Position p) {
-        return Math.toIntExact(this.game.board().cellNeighborsOf(p).stream()
-                .filter(n -> this.game.board().hasMineIn(n))
-                .count());
-    }
-
     public void show(Game game) {
         this.game = game;
         boardDisplay.clear();
@@ -102,16 +86,15 @@ public class BoardPresenter {
         boardDisplay.paint(
                 IntStream.range(0, this.game.board().level().width() * this.game.board().level().height())
                         .mapToObj(
-                                i -> new BoardDisplay.PaintOrder(
-                                        new Color(0, 100, 0),
-                                        BoardDisplay.CELL_SIZE * (i % this.game.board().level().width()),
-                                        BoardDisplay.CELL_SIZE * (i / this.game.board().level().width()),
-                                        BoardDisplay.CELL_SIZE,
-                                        BoardDisplay.CELL_SIZE,
+                                i ->    createPaintOrderAt(
+                                        new Cell.Position(
+                                                (i % this.game.board().level().width()) * BoardDisplay.CELL_SIZE,
+                                                (i / this.game.board().level().width()) * BoardDisplay.CELL_SIZE
+                                        ),
+                                        Color.UnopenedCell,
                                         null
-                                )
-                        )
-                        .toArray(BoardDisplay.PaintOrder[]::new)
+                                        )
+                                ).toArray(BoardDisplay.PaintOrder[]::new)
         );
     }
 }

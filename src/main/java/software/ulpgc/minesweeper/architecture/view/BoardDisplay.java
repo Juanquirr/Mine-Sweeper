@@ -1,8 +1,9 @@
 package software.ulpgc.minesweeper.architecture.view;
 
+import software.ulpgc.minesweeper.apps.windows.view.customization.Color;
+import software.ulpgc.minesweeper.architecture.model.Cell;
 import software.ulpgc.minesweeper.architecture.model.Level;
 
-import java.awt.*;
 import java.util.Objects;
 
 public interface BoardDisplay {
@@ -18,18 +19,18 @@ public interface BoardDisplay {
         void offset(int xOffset, int yOffset);
     }
 
-    public record PaintOrder(Color color, int x, int y, Integer number) {
+    public record PaintOrder(Cell.Position position, Color color, Integer number) {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             PaintOrder that = (PaintOrder) o;
-            return x == that.x && y == that.y && Objects.equals(color, that.color);
+            return position().equals(that.position) && Objects.equals(color, that.color);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(x, y);
+            return Objects.hash(position());
         }
     }
 }
