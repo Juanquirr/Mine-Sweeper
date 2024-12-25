@@ -1,6 +1,8 @@
 package software.ulpgc.minesweeper.architecture.model;
 
-public class BoardBuilder {
+import software.ulpgc.minesweeper.architecture.view.Builder;
+
+public class BoardBuilder implements Builder<Board> {
     private Level level;
 
     public BoardBuilder level(Level level) {

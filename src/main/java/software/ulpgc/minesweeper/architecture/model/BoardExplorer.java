@@ -12,13 +12,13 @@ public class BoardExplorer {
         this.edges = new HashSet<>();
     }
 
-    public BoardExplorer exploreFrom(Board board, Cell.Position startPosition) {
+    public void exploreFrom(Board board, Cell.Position startPosition) {
         System.out.println(startPosition);
+        System.out.println(board.cellNeighborsOf(startPosition));
         safeCells.clear();
         edges.clear();
         Set<Cell.Position> visited = new HashSet<>();
         explore(board, startPosition, visited);
-        return this;
     }
 
     private void explore(Board board, Cell.Position startPosition, Set<Cell.Position> visited) {

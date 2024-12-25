@@ -1,5 +1,7 @@
 package software.ulpgc.minesweeper.architecture.model;
 
+import software.ulpgc.minesweeper.architecture.view.BuilderFactory;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,35 +22,25 @@ public class Board {
     }
 
     public Cell cellAt(Cell.Position position) {
-        return cells.get(position.row() * level.width() + position.column());
+        return cells.get(position.x() * level.width() + position.y());
     }
 
     public List<Cell.Position> cellNeighborsOf(Cell.Position position) {
         return Arrays.stream(getDeltas())
-                .map(d -> new Cell.Position(position.row() + d[0], position.column() + d[1]))
+                .map(d -> new Cell.Position(position.x() + d[0], position.y() + d[1]))
                 .filter(this::isInBounds)
                 .toList();
     }
 
     private boolean isInBounds(Cell.Position p) {
-        return p.row() >= 0 && p.row() < level().height() && p.column() >= 0 && p.column() < level().width();
+        return p.x() >= 0 && p.x() < level().width() && p.y() >= 0 && p.y() < level().height();
     }
 
     private List<Cell> initializeCells() {
         List<Cell> cells = new ArrayList<>();
         for (int i = 0; i < level.width() * level.height(); i++) {
-            Cell.Position pos = new Cell.Position(i / level.width(), i % level.width());
-            cells.add(
-                    new Cell() {
-                        private final CellState cellState = CellState.NonSelected;
-
-                        @Override
-                        public CellState cellState() { return cellState; }
-
-                        @Override
-                        public Position position() { return pos; }
-                    }
-            );
+            Cell.Position pos = new Cell.Position(i % level.width(), i / level.width());
+            ((CellBuilder) BuilderFactory.getBuilder(Cell.class)).position(pos).gameState(Cell.CellState.UNOPENED).build();
         }
         return cells;
     }

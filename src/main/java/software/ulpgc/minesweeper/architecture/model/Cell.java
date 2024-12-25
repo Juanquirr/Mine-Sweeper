@@ -2,10 +2,14 @@ package software.ulpgc.minesweeper.architecture.model;
 
 public interface Cell {
     Position position();
-    record Position(int row, int column) {}
 
     CellState cellState();
+
+    Cell open();
+
+    record Position(int x, int y) {}
+
     enum CellState {
-        NonSelected, Selected, Flagged, Unknown
+        UNOPENED, OPENED, FLAGGED, UNKOWN
     }
 }

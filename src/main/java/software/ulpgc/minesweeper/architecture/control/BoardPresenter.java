@@ -1,12 +1,9 @@
 package software.ulpgc.minesweeper.architecture.control;
 
 import software.ulpgc.minesweeper.apps.windows.view.customization.Color;
-import software.ulpgc.minesweeper.architecture.model.BoardExplorer;
-import software.ulpgc.minesweeper.architecture.model.Cell;
-import software.ulpgc.minesweeper.architecture.model.Game;
-import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
+import software.ulpgc.minesweeper.architecture.model.*;
+import software.ulpgc.minesweeper.architecture.view.*;
 
-import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -17,68 +14,14 @@ public class BoardPresenter {
     private final AtomicInteger counter = new AtomicInteger(0);
     private Game game;
 
+
     public BoardPresenter(BoardDisplay boardDisplay) {
         this.boardDisplay = boardDisplay;
         this.boardExplorer = new BoardExplorer();
         this.boardDisplay.on(click());
     }
 
-    private BoardDisplay.Click click() {
-        return (xOffset, yOffset) -> {
-            if (this.game.gameResult() != null) return;
-            Cell.Position position = new Cell.Position(pixelToInteger(xOffset), pixelToInteger(yOffset));
-            if (this.game.gameState().equals(Game.GameState.Unbegun)) beginGame();
-            else this.game.add(new Game.Interaction(position, counter.get()));
-            this.game.board().initializeMinesExcluding(position);
-            boardDisplay.paint(getPaintOrderArrayFrom(position));
-            if (game.board().hasMineIn(position)) {
-                Game lostGame = new Game(this.game.board(), this.game.gameState(), Game.GameResult.Lost);
-                this.game.interactions().forEach(lostGame::add);
-                this.game = lostGame;
-            }
-        };
-    }
-
-    private BoardDisplay.PaintOrder[] getPaintOrderArrayFrom(Cell.Position position) {
-        boardExplorer.exploreFrom(this.game.board(), position);
-        return !game.board().hasMineIn(position) ? Stream.of(
-                boardExplorer.safeCells().stream()
-                        .map(
-                                p -> createPaintOrderAt(integerToPixelPosition(p), Color.SafeCell, null)
-                        ),
-                boardExplorer.edges().stream()
-                        .map(
-                                p -> createPaintOrderAt(integerToPixelPosition(p), Color.EdgeCell, boardExplorer.countNearMines(game.board(), p))
-                        )).flatMap(s -> s).toArray(BoardDisplay.PaintOrder[]::new) :
-
-                this.game.board().mines().stream()
-                        .map(
-                                p -> createPaintOrderAt(integerToPixelPosition(p), Color.MineCell, null)
-                        ).toArray(BoardDisplay.PaintOrder[]::new);
-
-    }
-
-    private Cell.Position integerToPixelPosition(Cell.Position p) {
-        return new Cell.Position(p.row() * BoardDisplay.CELL_SIZE, p.column() * BoardDisplay.CELL_SIZE);
-    }
-
-    private BoardDisplay.PaintOrder createPaintOrderAt(Cell.Position position, Color color, Integer number) {
-        return new PaintOrderBuilder().setPosition(position).setColor(color).setNumber(number).build();
-    }
-
-    private static int pixelToInteger(int offset) {
-        return offset / BoardDisplay.CELL_SIZE;
-    }
-
-    private void beginGame() {
-        this.game = new Game(this.game.board(), Game.GameState.Begun, null);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                counter.getAndIncrement();
-            }
-        }, 1000);
-    }
+    private PaintOrderBuilder paintOrderBuilder() { return BuilderFactory.getBuilder(BoardDisplay.PaintOrder.class); }
 
     public void show(Game game) {
         this.game = game;
@@ -86,16 +29,52 @@ public class BoardPresenter {
         boardDisplay.adjustDimensionTo(this.game.board().level().size());
         boardDisplay.paint(
                 IntStream.range(0, this.game.board().level().width() * this.game.board().level().height())
-                        .mapToObj(
-                                i ->    createPaintOrderAt(
-                                        new Cell.Position(
-                                                (i % this.game.board().level().width()) * BoardDisplay.CELL_SIZE,
-                                                (i / this.game.board().level().width()) * BoardDisplay.CELL_SIZE
-                                        ),
-                                        Color.UnopenedCell,
-                                        null
-                                        )
-                                ).toArray(BoardDisplay.PaintOrder[]::new)
+                        .mapToObj(i ->   paintOrderBuilder().setPosition(
+                                new Cell.Position(
+                                        (i % this.game.board().level().width()) * BoardDisplay.CELL_SIZE,
+                                        (i / this.game.board().level().width()) * BoardDisplay.CELL_SIZE
+                                )).setColor(Color.UnopenedCell).build()
+                        ).toArray(BoardDisplay.PaintOrder[]::new)
         );
+    }
+
+    private BoardDisplay.Click click() {
+        return (xOffset, yOffset) -> {
+            Cell.Position position = new Cell.Position(pixelToInteger(xOffset), pixelToInteger(yOffset));
+            game.board().initializeMinesExcluding(position);
+            boardDisplay.paint(getPaintOrderArrayFrom(position));
+        };
+    }
+
+    private BoardDisplay.PaintOrder[] getPaintOrderArrayFrom(Cell.Position position) {
+        boardExplorer.exploreFrom(this.game.board(), position);
+        return !game.board().hasMineIn(position) ?
+                Stream.of(safeCellStreamGiven(), edgeCellStreamGiven()).flatMap(s -> s)
+                        .toArray(BoardDisplay.PaintOrder[]::new) :
+                mineCellStreamGiven().toArray(BoardDisplay.PaintOrder[]::new);
+
+    }
+
+    private Stream<BoardDisplay.PaintOrder> mineCellStreamGiven() {
+        return game.board().mines().stream()
+                .map(p -> paintOrderBuilder().setPosition(integerToPixelPosition(p)).setColor(Color.MineCell).build());
+    }
+
+    private Stream<BoardDisplay.PaintOrder> edgeCellStreamGiven() {
+        return boardExplorer.edges().stream()
+                .map(p -> paintOrderBuilder().setPosition(integerToPixelPosition(p)).setColor(Color.EdgeCell).setNumber(boardExplorer.countNearMines(game.board(), p)).build());
+    }
+
+    private Stream<BoardDisplay.PaintOrder> safeCellStreamGiven() {
+        return boardExplorer.safeCells().stream()
+                .map(p -> paintOrderBuilder().setPosition(integerToPixelPosition(p)).setColor(Color.SafeCell).build());
+    }
+
+    private Cell.Position integerToPixelPosition(Cell.Position p) {
+        return new Cell.Position(p.x() * BoardDisplay.CELL_SIZE, p.y() * BoardDisplay.CELL_SIZE);
+    }
+
+    private static int pixelToInteger(int offset) {
+        return offset / BoardDisplay.CELL_SIZE;
     }
 }

@@ -43,11 +43,11 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
         System.out.println(orders.size());
         orders.forEach(p -> {
             g.setColor(p.color().getColor());
-            g.fillRect(p.position().row(), p.position().column(), CELL_SIZE, CELL_SIZE);
+            g.fillRect(p.position().x(), p.position().y(), CELL_SIZE, CELL_SIZE);
             g.setColor(new java.awt.Color(0, 128, 0));
-            g.drawRect(p.position().row(), p.position().column(), CELL_SIZE, CELL_SIZE);
+            g.drawRect(p.position().x(), p.position().y(), CELL_SIZE, CELL_SIZE);
             g.setColor(this.colors.get(p.number()).getColor());
-            if (p.number() != null) g.drawString(String.valueOf(p.number()), p.position().row() + CELL_SIZE / 2, p.position().column() + CELL_SIZE / 2);
+            if (p.number() != null) g.drawString(String.valueOf(p.number()), p.position().x() + CELL_SIZE / 2, p.position().y() + CELL_SIZE / 2);
         });
     }
 
@@ -60,7 +60,7 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
     public void paint(PaintOrder... orders) {
         if (this.orders.isEmpty()) Collections.addAll(this.orders, orders);
         for (PaintOrder order : orders) {
-            this.orders.set(((order.position().column() / CELL_SIZE) * (getPreferredSize().width / CELL_SIZE)) + (order.position().row() / CELL_SIZE), order);
+            this.orders.set(((order.position().y() / CELL_SIZE) * (getPreferredSize().width / CELL_SIZE)) + (order.position().x() / CELL_SIZE), order);
         }
         repaint();
     }

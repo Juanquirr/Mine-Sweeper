@@ -7,28 +7,21 @@ public class Game {
     private final List<Interaction> interactions;
     private final Board board;
     private final GameState gameState;
-    private final GameResult gameResult;
 
     public Game(Board board) {
         this.interactions = new ArrayList<>();
         this.board = board;
-        this.gameState = GameState.Unbegun;
-        this.gameResult = null;
+        this.gameState = GameState.UNBEGUN;
     }
 
-    public Game(Board board, GameState gameState, GameResult gameResult) {
+    public Game(Board board, GameState gameState) {
         this.interactions = new ArrayList<>();
         this.board = board;
         this.gameState = gameState;
-        this.gameResult = gameState.equals(GameState.Unbegun) ? null : gameResult;
     }
 
     public GameState gameState() {
         return gameState;
-    }
-
-    public GameResult gameResult() {
-        return gameResult;
     }
 
     public List<Interaction> interactions() {
@@ -44,14 +37,23 @@ public class Game {
         return board;
     }
 
+    public CellActionResult openCellAt(Cell.Position position) {
+        if (!this.gameState.equals(GameState.BEGUN)) return CellActionResult.INVALID;
+        if (this.board.cellAt(position).cellState().equals(Cell.CellState.OPENED)) return CellActionResult.INVALID;
+        GameState newGameSate;
+        if (this.board.hasMineIn(position)) {
+            newGameSate = GameState.LOST;
+        }
+        return CellActionResult.OPENED;
+    }
+
     public record Interaction(Cell.Position position, int seconds) {}
 
     public enum GameState {
-        Unbegun, Begun
+        UNBEGUN, BEGUN, WON, LOST
     }
 
-    public enum GameResult {
-        Won, Lost
+    public enum CellActionResult {
+        OPENED, MINE, MARKED, UNMARKED, INVALID
     }
-
 }
