@@ -1,26 +1,32 @@
-package software.ulpgc.minesweeper.architecture.control;
+package software.ulpgc.minesweeper.architecture.model.builders;
 
 import software.ulpgc.minesweeper.apps.windows.view.customization.Color;
 import software.ulpgc.minesweeper.architecture.model.Cell;
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
-import software.ulpgc.minesweeper.architecture.view.Builder;
 
 public class PaintOrderBuilder implements Builder<BoardDisplay.PaintOrder> {
     private Cell.Position position;
     private Color color;
     private Integer number;
 
-    public PaintOrderBuilder setPosition(Cell.Position position) {
+    private PaintOrderBuilder() {
+    }
+
+    public static PaintOrderBuilder create() {
+        return new PaintOrderBuilder();
+    }
+
+    public PaintOrderBuilder withPosition(Cell.Position position) {
         this.position = position;
         return this;
     }
 
-    public PaintOrderBuilder setColor(Color color) {
+    public PaintOrderBuilder withColor(Color color) {
         this.color = color;
         return this;
     }
 
-    public PaintOrderBuilder setNumber(Integer number) {
+    public PaintOrderBuilder withNumber(Integer number) {
         this.number = number;
         return this;
     }

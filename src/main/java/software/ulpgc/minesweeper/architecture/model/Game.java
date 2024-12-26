@@ -1,5 +1,7 @@
 package software.ulpgc.minesweeper.architecture.model;
 
+import software.ulpgc.minesweeper.architecture.model.builders.GameBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,31 +31,29 @@ public class Game {
     }
 
     public Game add(Interaction interaction) {
-        this.interactions.add(interaction);
-        return this;
+        interactions.add(interaction);
+        if (gameState.equals(GameState.UNBEGUN)) board.initializeMinesExcluding(interaction.position());
+        return openCellAt(interaction.position());
     }
 
     public Board board() {
         return board;
     }
 
-    public CellActionResult openCellAt(Cell.Position position) {
-        if (!this.gameState.equals(GameState.BEGUN)) return CellActionResult.INVALID;
-        if (this.board.cellAt(position).cellState().equals(Cell.CellState.OPENED)) return CellActionResult.INVALID;
-        GameState newGameSate;
-        if (this.board.hasMineIn(position)) {
-            newGameSate = GameState.LOST;
-        }
-        return CellActionResult.OPENED;
+    public Game openCellAt(Cell.Position position) {
+        if (board.cellAt(position).cellState().equals(Cell.CellState.OPENED)) return this;
+        Board newBoard = board.openCellAt(position);
+        return GameBuilder.create().withBoard(newBoard).withInteractions(interactions).withGameState(determineSate(position, newBoard)).build();
+    }
+
+    private GameState determineSate(Cell.Position position, Board board) {
+        return board.hasMineIn(position) ? GameState.LOST :
+                (interactions.size() == board.level().width() * board.level().height() - board.level().numberOfMines() ? GameState.WON : GameState.BEGUN);
     }
 
     public record Interaction(Cell.Position position, int seconds) {}
 
     public enum GameState {
         UNBEGUN, BEGUN, WON, LOST
-    }
-
-    public enum CellActionResult {
-        OPENED, MINE, MARKED, UNMARKED, INVALID
     }
 }

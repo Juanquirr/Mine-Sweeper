@@ -40,7 +40,6 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
 
     @Override
     public void paint(Graphics g) {
-        System.out.println(orders.size());
         orders.forEach(p -> {
             g.setColor(p.color().getColor());
             g.fillRect(p.position().x(), p.position().y(), CELL_SIZE, CELL_SIZE);

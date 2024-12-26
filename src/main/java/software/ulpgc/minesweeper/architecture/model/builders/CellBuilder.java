@@ -1,18 +1,25 @@
-package software.ulpgc.minesweeper.architecture.model;
+package software.ulpgc.minesweeper.architecture.model.builders;
 
-import software.ulpgc.minesweeper.architecture.view.Builder;
+import software.ulpgc.minesweeper.architecture.model.Cell;
 
 public class CellBuilder implements Builder<Cell> {
 
     private Cell.Position position;
     private Cell.CellState cellState;
 
-    public CellBuilder position(Cell.Position position) {
+    private CellBuilder() {
+    }
+
+    public static CellBuilder create() {
+        return new CellBuilder();
+    }
+
+    public CellBuilder withPosition(Cell.Position position) {
         this.position = position;
         return this;
     }
 
-    public CellBuilder gameState(Cell.CellState cellState) {
+    public CellBuilder withCellState(Cell.CellState cellState) {
         this.cellState = cellState;
         return this;
     }
@@ -33,7 +40,10 @@ public class CellBuilder implements Builder<Cell> {
 
             @Override
             public Cell open() {
-                return null;
+                return CellBuilder.create()
+                        .withPosition(position)
+                        .withCellState(Cell.CellState.OPENED)
+                        .build();
             }
         };
     }

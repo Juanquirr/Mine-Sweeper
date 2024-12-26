@@ -13,8 +13,6 @@ public class BoardExplorer {
     }
 
     public void exploreFrom(Board board, Cell.Position startPosition) {
-        System.out.println(startPosition);
-        System.out.println(board.cellNeighborsOf(startPosition));
         safeCells.clear();
         edges.clear();
         Set<Cell.Position> visited = new HashSet<>();
@@ -26,16 +24,15 @@ public class BoardExplorer {
 
         visited.add(startPosition);
 
-        for (Cell.Position position : board.cellNeighborsOf(startPosition)) {
+        for (Cell.Position position : board.nearPositionsOf(startPosition)) {
             if (board.hasMineIn(position)) {
                 edges.add(startPosition);
                 return;
             }
         }
 
-        board.cellNeighborsOf(startPosition).forEach(n -> explore(board, n, visited));
-
         safeCells.add(startPosition);
+        board.nearPositionsOf(startPosition).forEach(p -> explore(board, p, visited));
     }
 
     public Set<Cell.Position> safeCells() {
@@ -47,7 +44,7 @@ public class BoardExplorer {
     }
 
     public Integer countNearMines(Board board, Cell.Position position) {
-        return Math.toIntExact(board.cellNeighborsOf(position).stream()
+        return Math.toIntExact(board.nearPositionsOf(position).stream()
                 .filter(board::hasMineIn)
                 .count());
     }

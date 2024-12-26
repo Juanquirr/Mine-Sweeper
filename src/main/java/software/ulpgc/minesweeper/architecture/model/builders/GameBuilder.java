@@ -1,6 +1,7 @@
-package software.ulpgc.minesweeper.architecture.model;
+package software.ulpgc.minesweeper.architecture.model.builders;
 
-import software.ulpgc.minesweeper.architecture.view.Builder;
+import software.ulpgc.minesweeper.architecture.model.Board;
+import software.ulpgc.minesweeper.architecture.model.Game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,17 +12,24 @@ public class GameBuilder implements Builder<Game> {
     private Board board;
     private Game.GameState gameState;
 
-    public GameBuilder interactions(List<Game.Interaction> interactions) {
+    private GameBuilder() {
+    }
+
+    public static GameBuilder create() {
+        return new GameBuilder();
+    }
+
+    public GameBuilder withInteractions(List<Game.Interaction> interactions) {
         this.interactions = new ArrayList<>(interactions);
         return this;
     }
 
-    public GameBuilder board(Board board) {
+    public GameBuilder withBoard(Board board) {
         this.board = board;
         return this;
     }
 
-    public GameBuilder gameState(Game.GameState gameState) {
+    public GameBuilder withGameState(Game.GameState gameState) {
         this.gameState = gameState;
         return this;
     }
