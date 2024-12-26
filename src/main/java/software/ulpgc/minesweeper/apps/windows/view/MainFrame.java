@@ -1,5 +1,6 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
+import software.ulpgc.minesweeper.apps.windows.view.customization.CustomFont;
 import software.ulpgc.minesweeper.architecture.control.Command;
 import software.ulpgc.minesweeper.architecture.model.Level;
 import software.ulpgc.minesweeper.architecture.view.GameDisplay;
@@ -62,6 +63,9 @@ public class MainFrame extends JFrame {
             pack();
             setLocationRelativeTo(null);
         });
+        loadingPanel.startButton().setForeground(Color.white);
+        loadingPanel.startButton().setFont(new CustomFont().loadFont().deriveFont(25f));
+        loadingPanel.startButton().setBackground(new Color(200, 0, 0));
         return loadingPanel;
     }
 
