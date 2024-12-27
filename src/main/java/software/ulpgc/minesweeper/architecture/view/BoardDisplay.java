@@ -12,11 +12,10 @@ public interface BoardDisplay {
     void adjustDimensionTo(Level.Size size);
     void paint(PaintOrder... orders);
     void on(Click click);
-    void clear();
 
     interface Click {
-        Click NULL = (xOffset, yOffset) -> {};
-        void offset(int xOffset, int yOffset);
+        Click NULL = (xOffset, yOffset, button) -> {};
+        void offset(int xOffset, int yOffset, int button);
     }
 
     public record PaintOrder(Cell.Position position, Color color, Integer number) {

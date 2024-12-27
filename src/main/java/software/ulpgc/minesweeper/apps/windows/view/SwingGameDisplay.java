@@ -1,18 +1,20 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
+import software.ulpgc.minesweeper.architecture.view.Chronometer;
 import software.ulpgc.minesweeper.architecture.view.GameDisplay;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SwingGameplayDisplay extends JPanel implements GameDisplay {
-    private final Chronometer timer;
+public class SwingGameDisplay extends JPanel implements GameDisplay {
+    private final SwingChronometer chronometer;
     private final SwingBoardDisplay boardDisplay;
     private JButton finalizeButton;
+    private JButton restartButton;
 
-    public SwingGameplayDisplay() {
-        this.timer = new Chronometer();
+    public SwingGameDisplay() {
+        this.chronometer = new SwingChronometer();
         this.setLayout(new BorderLayout());
         this.add(BorderLayout.NORTH, createToolbar());
         this.add(BorderLayout.CENTER, this.boardDisplay = createBoardDisplay());
@@ -24,9 +26,15 @@ public class SwingGameplayDisplay extends JPanel implements GameDisplay {
 
     private JPanel createToolbar() {
         JPanel panel = new JPanel();
-        panel.add(timer);
+        panel.add(chronometer);
         panel.add(creteFinalizeButton());
+        panel.add(createRestartButton());
         return panel;
+    }
+
+    private JButton createRestartButton() {
+        this.restartButton = new JButton("🙂");
+        return restartButton;
     }
 
     private JButton creteFinalizeButton() {
@@ -36,11 +44,13 @@ public class SwingGameplayDisplay extends JPanel implements GameDisplay {
 
     @Override
     public void startGame() {
-
+        chronometer.start();
+        setVisible(true);
     }
 
     @Override
     public void stopGame() {
+        chronometer.stop();
         setVisible(false);
     }
 
@@ -49,7 +59,16 @@ public class SwingGameplayDisplay extends JPanel implements GameDisplay {
         return boardDisplay;
     }
 
+    @Override
+    public Chronometer chronometer() {
+        return chronometer;
+    }
+
     public JButton finalizeButton() {
         return finalizeButton;
+    }
+
+    public JButton restartButton() {
+        return restartButton;
     }
 }

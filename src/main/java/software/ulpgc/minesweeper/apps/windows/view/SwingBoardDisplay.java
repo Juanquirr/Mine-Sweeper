@@ -33,7 +33,7 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
         return new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                click.offset((e.getX() / CELL_SIZE) * CELL_SIZE, (e.getY() / CELL_SIZE) * CELL_SIZE);
+                click.offset((e.getX() / CELL_SIZE) * CELL_SIZE, (e.getY() / CELL_SIZE) * CELL_SIZE, e.getButton());
             }
         };
     }
@@ -67,11 +67,5 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
     @Override
     public void on(Click click) {
         this.click = click;
-    }
-
-    @Override
-    public void clear() {
-        this.orders.clear();
-        repaint();
     }
 }

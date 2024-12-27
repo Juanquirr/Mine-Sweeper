@@ -31,6 +31,7 @@ public class Game {
     }
 
     public Game add(Interaction interaction) {
+        if (gameState.equals(GameState.WON) || gameState.equals(GameState.LOST)) return this;
         interactions.add(interaction);
         if (gameState.equals(GameState.UNBEGUN)) board.initializeMinesExcluding(interaction.position());
         return openCellAt(interaction.position());
@@ -51,7 +52,7 @@ public class Game {
                 (interactions.size() == board.level().width() * board.level().height() - board.level().numberOfMines() ? GameState.WON : GameState.BEGUN);
     }
 
-    public record Interaction(Cell.Position position, int seconds) {}
+    public record Interaction(Cell.Position position, long seconds) {}
 
     public enum GameState {
         UNBEGUN, BEGUN, WON, LOST

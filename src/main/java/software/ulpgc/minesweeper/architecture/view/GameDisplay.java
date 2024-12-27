@@ -4,4 +4,5 @@ public interface GameDisplay {
     void startGame();
     void stopGame();
     BoardDisplay boardDisplay();
+    Chronometer chronometer();
 }

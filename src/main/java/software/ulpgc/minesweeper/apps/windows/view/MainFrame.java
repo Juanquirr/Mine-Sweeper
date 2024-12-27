@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class MainFrame extends JFrame {
     private final SwingMainMenuPanel mainMenuPanel;
-    private final SwingGameplayDisplay gameplayPanel;
+    private final SwingGameDisplay gameplayPanel;
     private final Map<String, Command> commands;
 
     private MainFrame() throws HeadlessException {
@@ -42,8 +42,8 @@ public class MainFrame extends JFrame {
         return this;
     }
 
-    private SwingGameplayDisplay createGameplayPanel() {
-        SwingGameplayDisplay swingGameplayPanel = new SwingGameplayDisplay();
+    private SwingGameDisplay createGameplayPanel() {
+        SwingGameDisplay swingGameplayPanel = new SwingGameDisplay();
         swingGameplayPanel.finalizeButton().addActionListener(x -> {
             commands.get("finish").execute();
             swingGameplayPanel.boardDisplay().adjustDimensionTo(new Level.Size(1, 1));
@@ -51,6 +51,7 @@ public class MainFrame extends JFrame {
             setSize(400, 400);
             setLocationRelativeTo(null);
         });
+        swingGameplayPanel.restartButton().addActionListener(e -> commands.get("start_game").execute());
         return swingGameplayPanel;
     }
 

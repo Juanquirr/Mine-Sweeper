@@ -8,9 +8,9 @@ import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
 
 public class StartCommand implements Command {
     private final MainMenuPanel mainMenuPanel;
-    private final BoardPresenter presenter;
+    private final GamePresenter presenter;
 
-    public StartCommand(MainMenuPanel mainMenuPanel, GameDisplay gameDisplay, BoardPresenter presenter) {
+    public StartCommand(MainMenuPanel mainMenuPanel, GameDisplay gameDisplay, GamePresenter presenter) {
         this.mainMenuPanel = mainMenuPanel;
         this.presenter = presenter;
     }

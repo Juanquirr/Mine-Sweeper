@@ -50,15 +50,6 @@ public class Board {
         return BoardBuilder.create().withLevel(level).withCells(newCells).withMines(mines).build();
     }
 
-    private List<Cell> initializeCells() {
-        List<Cell> cells = new ArrayList<>();
-        for (int i = 0; i < level.width() * level.height(); i++) {
-            Cell.Position pos = new Cell.Position(i % level.width(), i / level.width());
-            cells.add(CellBuilder.create().withPosition(pos).withCellState(Cell.CellState.UNOPENED).build());
-        }
-        return cells;
-    }
-
     public void initializeMinesExcluding(Cell.Position position) {
         if (!this.mines.isEmpty()) return;
         this.mines.addAll(new Random()
@@ -68,5 +59,14 @@ public class Board {
                 .distinct()
                 .limit(level().numberOfMines())
                 .collect(Collectors.toSet()));
+    }
+
+    private List<Cell> initializeCells() {
+        List<Cell> cells = new ArrayList<>();
+        for (int i = 0; i < level.width() * level.height(); i++) {
+            Cell.Position pos = new Cell.Position(i % level.width(), i / level.width());
+            cells.add(CellBuilder.create().withPosition(pos).withCellState(Cell.CellState.UNOPENED).build());
+        }
+        return cells;
     }
 }
