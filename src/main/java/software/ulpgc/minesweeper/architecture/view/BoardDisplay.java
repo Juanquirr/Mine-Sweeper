@@ -18,7 +18,7 @@ public interface BoardDisplay {
         void offset(int xOffset, int yOffset, int button);
     }
 
-    public record PaintOrder(Cell.Position position, Color color, Integer number) {
+    public record PaintOrder(Cell.Position position, Color color, Integer number, boolean flag) {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;

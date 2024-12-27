@@ -41,12 +41,8 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
     @Override
     public void paint(Graphics g) {
         orders.forEach(p -> {
-            g.setColor(p.color().getColor());
-            g.fillRect(p.position().x(), p.position().y(), CELL_SIZE, CELL_SIZE);
-            g.setColor(new java.awt.Color(0, 128, 0));
-            g.drawRect(p.position().x(), p.position().y(), CELL_SIZE, CELL_SIZE);
-            g.setColor(this.colors.get(p.number()).getColor());
-            if (p.number() != null) g.drawString(String.valueOf(p.number()), p.position().x() + CELL_SIZE / 2, p.position().y() + CELL_SIZE / 2);
+            if (!p.flag()) SwingPaintUtilities.drawCell(g, p, CELL_SIZE, colors);
+            else SwingPaintUtilities.drawFlag(g, p.position(), CELL_SIZE);
         });
     }
 
