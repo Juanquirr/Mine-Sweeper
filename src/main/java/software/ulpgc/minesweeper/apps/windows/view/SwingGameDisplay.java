@@ -51,7 +51,23 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
     @Override
     public void stopGame() {
         chronometer.stop();
-        setVisible(false);
+    }
+
+    @Override
+    public void resetGame() {
+        this.restartButton.setText("🙂");
+    }
+
+    @Override
+    public void showWinDisplay() {
+        this.restartButton.setText("😎");
+        JOptionPane.showMessageDialog(null, "WIN WON WIN!");
+    }
+
+    @Override
+    public void showLostDisplay() {
+        this.restartButton.setText("🤯");
+        JOptionPane.showMessageDialog(null, "LOST LOST!");
     }
 
     @Override

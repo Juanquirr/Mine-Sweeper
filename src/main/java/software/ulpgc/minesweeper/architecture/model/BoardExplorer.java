@@ -13,6 +13,7 @@ public class BoardExplorer {
     }
 
     public void exploreFrom(Board board, Cell.Position startPosition) {
+        if (board.cellAt(startPosition).cellState().equals(Cell.CellState.OPENED) || board.cellAt(startPosition).cellState().equals(Cell.CellState.FLAGGED)) return;
         safeCells.clear();
         edges.clear();
         Set<Cell.Position> visited = new HashSet<>();

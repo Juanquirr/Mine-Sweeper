@@ -2,6 +2,7 @@ package software.ulpgc.minesweeper.apps.windows.view.customization;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Objects;
 
 public class CustomFont {
     private final Font customFont;
@@ -9,7 +10,11 @@ public class CustomFont {
         try {
             this.customFont = Font.createFont(
                             Font.TRUETYPE_FONT,
-                            new File("LuckiestGuy-Regular.ttf")
+                            new File(
+                                    Objects.requireNonNull(
+                                            CustomFont.class.getClassLoader().getResource("LuckiestGuy-Regular.ttf")
+                                    ).getFile()
+                            )
                     )
                     .deriveFont(24f);
         } catch (Exception e) {

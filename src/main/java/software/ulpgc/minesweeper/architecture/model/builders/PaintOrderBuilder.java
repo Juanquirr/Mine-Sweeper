@@ -1,12 +1,12 @@
 package software.ulpgc.minesweeper.architecture.model.builders;
 
 import software.ulpgc.minesweeper.apps.windows.view.customization.Color;
+import software.ulpgc.minesweeper.architecture.model.Board;
 import software.ulpgc.minesweeper.architecture.model.BoardExplorer;
 import software.ulpgc.minesweeper.architecture.model.Cell;
-import software.ulpgc.minesweeper.architecture.model.Game;
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -15,6 +15,11 @@ public class PaintOrderBuilder implements Builder<BoardDisplay.PaintOrder> {
     private Color color;
     private Integer number;
     private boolean flag;
+    private final Map<Cell.CellState, Color> colorMap = Map.of(
+            Cell.CellState.OPENED, Color.SafeCell,
+            Cell.CellState.FLAGGED, Color.UnopenedCell,
+            Cell.CellState.UNOPENED, Color.UnopenedCell
+    );
 
     private PaintOrderBuilder() {
         flag = false;
@@ -24,12 +29,33 @@ public class PaintOrderBuilder implements Builder<BoardDisplay.PaintOrder> {
         return new PaintOrderBuilder();
     }
 
-    public static Stream<BoardDisplay.PaintOrder> safeCell(BoardExplorer boardExplorer, int dt) {
-        return boardExplorer.safeCells().stream().map(p -> create().withPosition(PositionAdapter.adaptToPixel(p, dt)).withColor(Color.SafeCell).build());
+    public static Stream<BoardDisplay.PaintOrder> boardPaintOrder(BoardExplorer explorer, Board board, int dt) {
+        return board.cells().stream()
+                .map(c -> board.hasMineIn(c.position()) && board.cellAt(c.position()).cellState().equals(Cell.CellState.OPENED) ?
+                        minePaintOrder(c, dt) :
+                        (c.cellState().equals(Cell.CellState.FLAGGED)) ? flaggedPaintOrder(board, c, dt) :
+                        (explorer.countNearMines(board, c.position()) != 0 ?
+                            edgePaintOrder(explorer, board, dt, c) :
+                            safePaintOrder(c, dt))
+                );
     }
 
-    public static Stream<BoardDisplay.PaintOrder> edgeCell(BoardExplorer boardExplorer, Game game, int dt) {
-        return boardExplorer.edges().stream().map(p -> create().withPosition(PositionAdapter.adaptToPixel(p, dt)).withColor(Color.EdgeCell).withNumber(boardExplorer.countNearMines(game.board(), p)).build());
+    private static BoardDisplay.PaintOrder minePaintOrder(Cell c, int dt) {
+        return create().withPosition(PositionAdapter.adaptToPixel(c.position(), dt)).withColor(Color.MineCell).build();
+    }
+
+    private static BoardDisplay.PaintOrder flaggedPaintOrder(Board board, Cell c, int dt) {
+        return (board.cellAt(c.position()).cellState().equals(Cell.CellState.FLAGGED)) ?
+                create().withPosition(PositionAdapter.adaptToPixel(c.position(), dt)).withColor(Color.UnopenedCell).withFlag(true).build() :
+                create().withPosition(PositionAdapter.adaptToPixel(c.position(), dt)).withColor(Color.UnopenedCell).withFlag(false).build();
+    }
+
+    private static BoardDisplay.PaintOrder safePaintOrder(Cell c, int dt) {
+        return create().withPosition(PositionAdapter.adaptToPixel(c.position(), dt)).withColor(c.cellState().equals(Cell.CellState.OPENED) ? Color.SafeCell : Color.UnopenedCell).build();
+    }
+
+    private static BoardDisplay.PaintOrder edgePaintOrder(BoardExplorer explorer, Board board, int dt, Cell c) {
+        return create().withPosition(PositionAdapter.adaptToPixel(c.position(), dt)).withColor(c.cellState().equals(Cell.CellState.OPENED) ? Color.EdgeCell : Color.UnopenedCell).withNumber(c.cellState().equals(Cell.CellState.OPENED) ? explorer.countNearMines(board, c.position()) : null).build();
     }
 
     public static Stream<BoardDisplay.PaintOrder> mineCell(Set<Cell.Position> cells, int dt) {

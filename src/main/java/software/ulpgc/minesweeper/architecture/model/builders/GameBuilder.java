@@ -5,14 +5,15 @@ import software.ulpgc.minesweeper.architecture.model.Game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class GameBuilder implements Builder<Game> {
     private List<Game.Interaction> interactions;
     private Board board;
     private Game.GameState gameState;
+    private int remainCells;
 
     private GameBuilder() {
+        this.interactions = new ArrayList<>();
     }
 
     public static GameBuilder create() {
@@ -34,10 +35,13 @@ public class GameBuilder implements Builder<Game> {
         return this;
     }
 
+    public GameBuilder withRemainCells(int remainCells) {
+        this.remainCells = remainCells;
+        return this;
+    }
+
     @Override
     public Game build() {
-        Game game = new Game(board, gameState);
-        if (!Objects.isNull(interactions)) interactions.forEach(game::add);
-        return game;
+        return new Game(board, gameState, interactions, remainCells);
     }
 }

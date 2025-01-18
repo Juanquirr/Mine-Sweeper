@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 public class Board {
     private final Level level;
     private final List<Cell> cells;
-
     private final Set<Cell.Position> mines;
 
     public Board(Level level) {
@@ -30,6 +29,10 @@ public class Board {
         return cells.get(PositionUtilities.indexFromPosition(position, level.width()));
     }
 
+    public List<Cell> cells() {
+        return new ArrayList<>(cells);
+    }
+
     public List<Cell.Position> nearPositionsOf(Cell.Position position) {
         return PositionUtilities.getNearPositionInBoundsFrom(position, level.width(), level.height());
     }
@@ -40,14 +43,6 @@ public class Board {
 
     public Set<Cell.Position> mines() {
         return new HashSet<>(mines);
-    }
-
-    public Board openCellAt(Cell.Position position) {
-        if (cellAt(position).cellState().equals(Cell.CellState.OPENED)) return this;
-        ArrayList<Cell> newCells = new ArrayList<>(cells);
-        Cell open = cellAt(position).open();
-        newCells.set(PositionUtilities.indexFromPosition(open.position(), level.width()), open);
-        return BoardBuilder.create().withLevel(level).withCells(newCells).withMines(mines).build();
     }
 
     public void initializeMinesExcluding(Cell.Position position) {

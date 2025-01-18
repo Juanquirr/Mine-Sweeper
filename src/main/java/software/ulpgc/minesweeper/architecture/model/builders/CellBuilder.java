@@ -45,6 +45,23 @@ public class CellBuilder implements Builder<Cell> {
                         .withCellState(Cell.CellState.OPENED)
                         .build();
             }
+
+            @Override
+            public Cell flag() {
+                return CellBuilder.create()
+                        .withPosition(position)
+                        .withCellState(
+                                this.cellState().equals(CellState.FLAGGED) ?
+                                        CellState.UNOPENED : CellState.FLAGGED
+                        ).build();
+            }
+
+            @Override
+            public Cell unflag() {
+                return CellBuilder.create()
+                        .withPosition(position)
+                        .withCellState(CellState.UNOPENED).build();
+            }
         };
     }
 }

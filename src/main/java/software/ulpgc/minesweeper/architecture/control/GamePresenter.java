@@ -7,7 +7,9 @@ import software.ulpgc.minesweeper.architecture.view.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
+
+import static software.ulpgc.minesweeper.architecture.model.Button.LEFT_BUTTON;
+import static software.ulpgc.minesweeper.architecture.model.Button.RIGHT_BUTTON;
 
 public class GamePresenter {
     private Game game;
@@ -25,7 +27,6 @@ public class GamePresenter {
     public void show(Game game) {
         this.game = game;
         gameDisplay.boardDisplay().adjustDimensionTo(this.game.board().level().size());
-        gameDisplay.stopGame();
         gameDisplay.boardDisplay().paint(
                 IntStream.range(0, this.game.board().level().width() * this.game.board().level().height())
                         .mapToObj(i ->   PaintOrderBuilder.create().withPosition(
@@ -39,27 +40,44 @@ public class GamePresenter {
 
     private BoardDisplay.Click click() {
         return (xOffset, yOffset, button) -> {
-            if (game.gameState().equals(Game.GameState.WON) || game.gameState().equals(Game.GameState.LOST)) return;
-            if (game.gameState().equals(Game.GameState.UNBEGUN)) gameDisplay.startGame();
+            if (endedGame()) return;
             Cell.Position position = new Cell.Position(pixelToInteger(xOffset), pixelToInteger(yOffset));
-            game = game.add(new Game.Interaction(position, gameDisplay.chronometer().currentTime()));
-            gameDisplay.boardDisplay().paint(button == 3 ? getFlagPaintOrderArrayFrom(position) : getPaintOrderArrayFrom(position));
-            if (!game.gameState().equals(Game.GameState.BEGUN)) gameDisplay.stopGame();
+            game = game.add(new Game.Interaction(position, getAction(button), gameDisplay.chronometer().currentTime()));
+            gameDisplay.boardDisplay().paint(getPaintOrderArrayFrom(position));
+            checkGameState();
         };
     }
 
+    private void checkGameState() {
+        if (!game.gameState().equals(Game.GameState.BEGUN)) gameDisplay.stopGame();
+        switch (game.gameState()) {
+            case WON -> gameDisplay.showWinDisplay();
+            case LOST -> gameDisplay.showLostDisplay();
+        }
+    }
+
+    private Game.Action getAction(int button) {
+        return switch (button) {
+            case LEFT_BUTTON -> Game.Action.OPEN;
+            case RIGHT_BUTTON -> Game.Action.FLAG;
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + button);
+        };
+    }
+
+    private boolean endedGame() {
+        if (game.gameState().equals(Game.GameState.UNBEGUN)) gameDisplay.startGame();
+        return game.gameState().equals(Game.GameState.WON) || game.gameState().equals(Game.GameState.LOST);
+    }
+
     private BoardDisplay.PaintOrder[] getFlagPaintOrderArrayFrom(Cell.Position position) {
-        return new BoardDisplay.PaintOrder[]{PaintOrderBuilder.create().withPosition(integerToPixelPosition(position)).withColor(Color.UnopenedCell).withFlag(true).build()};
+        return (game.board().cellAt(position).cellState().equals(Cell.CellState.FLAGGED)) ?
+                new BoardDisplay.PaintOrder[]{PaintOrderBuilder.create().withPosition(integerToPixelPosition(position)).withColor(Color.UnopenedCell).withFlag(true).build()} :
+                new BoardDisplay.PaintOrder[]{PaintOrderBuilder.create().withPosition(integerToPixelPosition(position)).withColor(Color.UnopenedCell).withFlag(false).build()};
     }
 
     private BoardDisplay.PaintOrder[] getPaintOrderArrayFrom(Cell.Position position) {
-        boardExplorer.exploreFrom(this.game.board(), position);
-        return !game.board().hasMineIn(position) ?
-                Stream.of(
-                        PaintOrderBuilder.safeCell(boardExplorer, BoardDisplay.CELL_SIZE),
-                                PaintOrderBuilder.edgeCell(boardExplorer, game, BoardDisplay.CELL_SIZE)
-                        ).flatMap(s -> s).toArray(BoardDisplay.PaintOrder[]::new) :
-                PaintOrderBuilder.mineCell(game.board().mines(), BoardDisplay.CELL_SIZE).toArray(BoardDisplay.PaintOrder[]::new);
+        return PaintOrderBuilder.boardPaintOrder(boardExplorer, game.board(), BoardDisplay.CELL_SIZE).toArray(BoardDisplay.PaintOrder[]::new);
     }
 
     private Cell.Position integerToPixelPosition(Cell.Position p) {

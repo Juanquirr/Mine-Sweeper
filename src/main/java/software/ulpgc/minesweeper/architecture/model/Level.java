@@ -1,7 +1,7 @@
 package software.ulpgc.minesweeper.architecture.model;
 
 public enum Level {
-    BEGINNER(9, 9, 10),
+    BEGINNER(9, 9, 1),
     INTERMEDIATE(16, 16, 40),
     EXPERT(30, 16, 99);
 

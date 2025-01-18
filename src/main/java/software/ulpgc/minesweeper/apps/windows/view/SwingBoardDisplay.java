@@ -41,8 +41,8 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
     @Override
     public void paint(Graphics g) {
         orders.forEach(p -> {
-            if (!p.flag()) SwingPaintUtilities.drawCell(g, p, CELL_SIZE, colors);
-            else SwingPaintUtilities.drawFlag(g, p.position(), CELL_SIZE);
+            SwingPaintUtilities.drawCell(g, p, CELL_SIZE, colors);
+            if (p.flag()) SwingPaintUtilities.drawFlag(g, p.position(), CELL_SIZE);
         });
     }
 
@@ -53,10 +53,8 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
 
     @Override
     public void paint(PaintOrder... orders) {
-        if (this.orders.isEmpty()) Collections.addAll(this.orders, orders);
-        for (PaintOrder order : orders) {
-            this.orders.set(((order.position().y() / CELL_SIZE) * (getPreferredSize().width / CELL_SIZE)) + (order.position().x() / CELL_SIZE), order);
-        }
+        this.orders.clear();
+        Collections.addAll(this.orders, orders);
         repaint();
     }
 

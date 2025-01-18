@@ -47,6 +47,7 @@ public class MainFrame extends JFrame {
         swingGameplayPanel.finalizeButton().addActionListener(x -> {
             commands.get("finish").execute();
             swingGameplayPanel.boardDisplay().adjustDimensionTo(new Level.Size(1, 1));
+            swingGameplayPanel.setVisible(false);
             ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "LOADING");
             setSize(400, 400);
             setLocationRelativeTo(null);
