@@ -17,6 +17,6 @@ public class SwingCounterDisplay extends JPanel implements CounterDisplay {
 
     @Override
     public void show(Integer integer) {
-        label.setText(String.valueOf(integer));
+        label.setText(String.format("%03d", integer));
     }
 }
