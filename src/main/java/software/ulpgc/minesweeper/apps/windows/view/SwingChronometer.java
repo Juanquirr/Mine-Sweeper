@@ -13,7 +13,7 @@ public class SwingChronometer extends JPanel implements Chronometer {
     private final AtomicLong counter = new AtomicLong(0);
 
     public SwingChronometer() {
-        add(this.label = new JLabel("00:00"));
+        add(this.label = new JLabel("000"));
         this.label.setBorder(new LineBorder(new Color(0,0,10), 4));
         this.label.setFont(new Font("Arial", Font.PLAIN, 20));
         this.timer = createTimer();
@@ -32,7 +32,7 @@ public class SwingChronometer extends JPanel implements Chronometer {
     @Override
     public void stop(){
         this.timer.stop();
-        this.label.setText("00:00");
+        this.label.setText("000");
         counter.set(0);
     }
 
@@ -44,6 +44,6 @@ public class SwingChronometer extends JPanel implements Chronometer {
     }
 
     private String normalize(){
-        return String.format("%02d:%02d", (counter.get() / 100) / 60, (counter.get() / 100) % 60);
+        return String.format("%03d", counter.get() / 100);
     }
 }

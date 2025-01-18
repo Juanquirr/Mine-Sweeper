@@ -1,52 +1,50 @@
 package software.ulpgc.minesweeper.architecture.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class BoardExplorer {
-    private final Set<Cell.Position> safeCells;
-    private final Set<Cell.Position> edges;
-
-    public BoardExplorer() {
-        this.safeCells = new HashSet<>();
-        this.edges = new HashSet<>();
+    public static Map<String, List<Cell.Position>> exploreFrom(Board board, Cell.Position startPosition) {
+        if (board.cellAt(startPosition).cellState().equals(Cell.CellState.OPENED)
+                || board.cellAt(startPosition).cellState().equals(Cell.CellState.FLAGGED)) return new HashMap<>();
+        return explore(board, buildCellsMap(), startPosition, new HashSet<>());
     }
 
-    public void exploreFrom(Board board, Cell.Position startPosition) {
-        if (board.cellAt(startPosition).cellState().equals(Cell.CellState.OPENED) || board.cellAt(startPosition).cellState().equals(Cell.CellState.FLAGGED)) return;
-        safeCells.clear();
-        edges.clear();
-        Set<Cell.Position> visited = new HashSet<>();
-        explore(board, startPosition, visited);
+    private static Map<String, List<Cell.Position>> buildCellsMap() {
+        Map<String, List<Cell.Position>> openedCells = new HashMap<>();
+        List<Cell.Position> safeCells = new ArrayList<>();
+        List<Cell.Position> edgeCells = new ArrayList<>();
+        openedCells.put("safe", safeCells);
+        openedCells.put("edge", edgeCells);
+        return openedCells;
     }
 
-    private void explore(Board board, Cell.Position startPosition, Set<Cell.Position> visited) {
-        if (visited.contains(startPosition) || board.hasMineIn(startPosition)) return;
+    private static Map<String, List<Cell.Position>> explore(Board board, Map<String, List<Cell.Position>> openedCells, Cell.Position startPosition, Set<Cell.Position> visited) {
+        if (visited.contains(startPosition) || board.hasMineIn(startPosition))
+            return openedCells;
 
         visited.add(startPosition);
 
         for (Cell.Position position : board.nearPositionsOf(startPosition)) {
             if (board.hasMineIn(position)) {
-                edges.add(startPosition);
-                return;
+                openedCells.get("edge").add(startPosition);
+                return openedCells;
             }
         }
 
-        safeCells.add(startPosition);
-        board.nearPositionsOf(startPosition).forEach(p -> explore(board, p, visited));
+        openedCells.get("safe").add(startPosition);
+        board.nearPositionsOf(startPosition).forEach(p -> explore(board, openedCells, p, visited));
+        return openedCells;
     }
 
-    public Set<Cell.Position> safeCells() {
-        return new HashSet<>(safeCells);
-    }
-
-    public Set<Cell.Position> edges() {
-        return new HashSet<>(edges);
-    }
-
-    public Integer countNearMines(Board board, Cell.Position position) {
+    public static Integer countNearMines(Board board, Cell.Position position) {
         return Math.toIntExact(board.nearPositionsOf(position).stream()
                 .filter(board::hasMineIn)
+                .count());
+    }
+
+    public static Integer countRemainMines(Board board) {
+        return board.level().numberOfMines() - Math.toIntExact(board.cells().stream()
+                .filter(c -> c.cellState().equals(Cell.CellState.FLAGGED))
                 .count());
     }
 }

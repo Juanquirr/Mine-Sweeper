@@ -42,7 +42,6 @@ public class SwingLevelDialog extends JPanel implements LevelDialog {
 
     @Override
     public Level get() {
-        System.out.println(Level.valueOf(group.getSelection().getActionCommand()));
         return Level.valueOf(group.getSelection().getActionCommand());
     }
 }

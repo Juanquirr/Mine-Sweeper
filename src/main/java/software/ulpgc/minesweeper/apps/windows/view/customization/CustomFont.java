@@ -10,11 +10,7 @@ public class CustomFont {
         try {
             this.customFont = Font.createFont(
                             Font.TRUETYPE_FONT,
-                            new File(
-                                    Objects.requireNonNull(
-                                            CustomFont.class.getClassLoader().getResource("LuckiestGuy-Regular.ttf")
-                                    ).getFile()
-                            )
+                            new File("src/main/resources/LuckiestGuy-Regular.ttf")
                     )
                     .deriveFont(24f);
         } catch (Exception e) {

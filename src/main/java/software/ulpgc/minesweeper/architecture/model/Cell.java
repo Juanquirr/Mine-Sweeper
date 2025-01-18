@@ -9,11 +9,9 @@ public interface Cell {
 
     Cell flag();
 
-    Cell unflag();
-
     record Position(int x, int y) {}
 
     enum CellState {
-        UNOPENED, OPENED, FLAGGED, EDGE
+        UNOPENED, OPENED, FLAGGED
     }
 }

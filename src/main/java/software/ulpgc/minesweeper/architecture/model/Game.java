@@ -5,6 +5,7 @@ import software.ulpgc.minesweeper.architecture.model.builders.GameBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Game {
     private final List<Interaction> interactions;
@@ -17,16 +18,6 @@ public class Game {
         this.gameState = gameState;
     }
 
-    public Game(Board board, GameState gameState) {
-        this.interactions = new ArrayList<>();
-        this.board = board;
-        this.gameState = gameState;
-    }
-
-    public GameState gameState() {
-        return gameState;
-    }
-
     public List<Interaction> interactions() {
         return new ArrayList<>(interactions);
     }
@@ -35,10 +26,6 @@ public class Game {
         interactions.add(interaction);
         if (gameState.equals(GameState.UNBEGUN)) board.initializeMinesExcluding(interaction.position());
         return openCellAt(interaction.position(), interaction.action());
-    }
-
-    public Board board() {
-        return board;
     }
 
     public Game openCellAt(Cell.Position position, Action action) {
@@ -53,39 +40,51 @@ public class Game {
     }
 
     private List<Cell> openCell(Cell cell) {
-        if (board.cellAt(cell.position()).cellState().equals(Cell.CellState.FLAGGED)) return new ArrayList<>();
+        if (isFlagged(cell.position())) return new ArrayList<>();
         if (board.hasMineIn(cell.position())) return revealMines();
-        BoardExplorer explorer = new BoardExplorer();
-        explorer.exploreFrom(board, cell.position());
+        Map<String, List<Cell.Position>> exploredCells = BoardExplorer.exploreFrom(board, cell.position());
         return board.cells().stream()
-                .filter(c -> explorer.safeCells().contains(c.position()) || explorer.edges().contains(c.position()))
+                .filter(c -> exploredCells.get("safe").contains(c.position()) || exploredCells.get("edge").contains(c.position()))
                 .map(Cell::open)
                 .toList();
     }
 
+    private boolean isFlagged(Cell.Position position) {
+        return board.cellAt(position).cellState().equals(Cell.CellState.FLAGGED);
+    }
+
     private List<Cell> revealMines() {
-        return board.mines().stream()
-                .map(p -> board.cellAt(p).open())
-                .toList();
+        return board.mines().stream().map(p -> board.cellAt(p).open()).toList();
     }
 
     private List<Cell> flagCell(Cell cell) {
-        if (cell.cellState().equals(Cell.CellState.OPENED)) return List.of(cell);
-        return List.of(cell.cellState().equals(Cell.CellState.FLAGGED) ? cell.unflag() : cell.flag());
+        if (isOpened(board, cell.position())) return List.of(cell);
+        return List.of(cell.flag());
     }
 
-    public Board performActionOn(Cell.Position position, Game.Action action) {
-        if (board.cellAt(position).cellState().equals(Cell.CellState.OPENED)) return board;
-        ArrayList<Cell> newCells = new ArrayList<>(board.cells());
-        List<Cell> cells = action.equals(Action.FLAG) ?
-                flagCell(board.cellAt(position)) : openCell(board.cellAt(position));
-        cells.forEach(c -> newCells.set(PositionUtilities.indexFromPosition(c.position(), board.level().width()), c));
+    private Board performActionOn(Cell.Position position, Game.Action action) {
+        if (isOpened(board, position)) return board;
+        List<Cell> newCells = new ArrayList<>(board.cells());
+        (action.equals(Action.FLAG) ? flagCell(board.cellAt(position)) : openCell(board.cellAt(position)))
+                .forEach(c -> newCells.set(PositionUtilities.indexFromPosition(c.position(), board.level().width()), c));
         return BoardBuilder.create().withLevel(board.level()).withCells(newCells).withMines(board.mines()).build();
     }
 
+    private boolean isOpened(Board board, Cell.Position position) {
+        return board.cellAt(position).cellState().equals(Cell.CellState.OPENED);
+    }
+
     private GameState determineSate(Cell.Position position, Board board) {
-        return board.hasMineIn(position) && board.cellAt(position).cellState().equals(Cell.CellState.OPENED) ? GameState.LOST :
+        return board.hasMineIn(position) && isOpened(board, position) ? GameState.LOST :
                 (determineRemainCells(board) == 0 ? GameState.WON : GameState.BEGUN);
+    }
+
+    public GameState gameState() {
+        return gameState;
+    }
+
+    public Board board() {
+        return board;
     }
 
     public record Interaction(Cell.Position position, Action action, long seconds) {}

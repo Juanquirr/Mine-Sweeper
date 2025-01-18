@@ -30,7 +30,7 @@ public class MainFrame extends JFrame {
 
         layout.show(getContentPane(), "GAME");
         layout.show(getContentPane(), "LOADING");
-        setSize(400, 400);
+        pack();
     }
 
     public static MainFrame create() {
@@ -49,7 +49,7 @@ public class MainFrame extends JFrame {
             swingGameplayPanel.boardDisplay().adjustDimensionTo(new Level.Size(1, 1));
             swingGameplayPanel.setVisible(false);
             ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "LOADING");
-            setSize(400, 400);
+            pack();
             setLocationRelativeTo(null);
         });
         swingGameplayPanel.restartButton().addActionListener(e -> commands.get("start_game").execute());

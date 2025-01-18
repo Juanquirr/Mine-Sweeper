@@ -2,22 +2,25 @@ package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
 import software.ulpgc.minesweeper.architecture.view.Chronometer;
+import software.ulpgc.minesweeper.architecture.view.CounterDisplay;
 import software.ulpgc.minesweeper.architecture.view.GameDisplay;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SwingGameDisplay extends JPanel implements GameDisplay {
-    private final SwingChronometer chronometer;
-    private final SwingBoardDisplay boardDisplay;
+    private final Chronometer chronometer;
+    private final BoardDisplay boardDisplay;
+    private final CounterDisplay counterDisplay;
     private JButton finalizeButton;
     private JButton restartButton;
 
     public SwingGameDisplay() {
         this.chronometer = new SwingChronometer();
+        this.counterDisplay = createCounterDisplay();
         this.setLayout(new BorderLayout());
         this.add(BorderLayout.NORTH, createToolbar());
-        this.add(BorderLayout.CENTER, this.boardDisplay = createBoardDisplay());
+        this.add(BorderLayout.CENTER, (Component) (this.boardDisplay = createBoardDisplay()));
     }
 
     private SwingBoardDisplay createBoardDisplay() {
@@ -26,10 +29,15 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
 
     private JPanel createToolbar() {
         JPanel panel = new JPanel();
-        panel.add(chronometer);
-        panel.add(creteFinalizeButton());
+        panel.add((Component) counterDisplay);
         panel.add(createRestartButton());
+        panel.add((Component) chronometer);
+        panel.add(creteFinalizeButton());
         return panel;
+    }
+
+    private SwingCounterDisplay createCounterDisplay() {
+        return new SwingCounterDisplay();
     }
 
     private JButton createRestartButton() {
@@ -61,13 +69,13 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
     @Override
     public void showWinDisplay() {
         this.restartButton.setText("😎");
-        JOptionPane.showMessageDialog(null, "WIN WON WIN!");
+        JOptionPane.showMessageDialog(null, "YOU WON! :-D");
     }
 
     @Override
     public void showLostDisplay() {
-        this.restartButton.setText("🤯");
-        JOptionPane.showMessageDialog(null, "LOST LOST!");
+        this.restartButton.setText("🙁");
+        JOptionPane.showMessageDialog(null, "TRY HARDER! (╯°□°）╯︵ ┻━┻");
     }
 
     @Override
@@ -78,6 +86,11 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
     @Override
     public Chronometer chronometer() {
         return chronometer;
+    }
+
+    @Override
+    public CounterDisplay counterDisplay() {
+        return counterDisplay;
     }
 
     public JButton finalizeButton() {

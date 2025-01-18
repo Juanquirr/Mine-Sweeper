@@ -7,7 +7,7 @@ public class PositionAdapter {
         return new Cell.Position(p.x() * dp, p.y() * dp);
     }
 
-    private static int pixelToInteger(int offset, int dp) {
+    public static int adaptToInteger(int offset, int dp) {
         return offset / dp;
     }
 }

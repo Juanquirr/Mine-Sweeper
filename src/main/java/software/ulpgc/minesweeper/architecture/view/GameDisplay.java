@@ -14,4 +14,6 @@ public interface GameDisplay {
     BoardDisplay boardDisplay();
 
     Chronometer chronometer();
+
+    CounterDisplay counterDisplay();
 }
