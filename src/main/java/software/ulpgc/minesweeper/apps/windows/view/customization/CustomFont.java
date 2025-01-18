@@ -2,7 +2,6 @@ package software.ulpgc.minesweeper.apps.windows.view.customization;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Objects;
 
 public class CustomFont {
     private final Font customFont;
