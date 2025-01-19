@@ -30,6 +30,7 @@ public class GamePresenter {
     private BoardDisplay.Click click() {
         return (xOffset, yOffset, button) -> {
             if (endedGame()) return;
+            if (getAction(button) == null) return;
             Cell.Position position = new Cell.Position(PositionAdapter.adaptToInteger(xOffset, CELL_SIZE), PositionAdapter.adaptToInteger(yOffset, CELL_SIZE));
             game = game.add(new Game.Interaction(position, getAction(button), gameDisplay.chronometer().currentTime()));
             gameDisplay.boardDisplay().paint(getPaintOrderArrayFrom(position));

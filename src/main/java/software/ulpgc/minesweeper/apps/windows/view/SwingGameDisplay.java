@@ -14,6 +14,7 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
     private final CounterDisplay counterDisplay;
     private JButton finalizeButton;
     private JButton restartButton;
+    private JPanel replayToolbar;
 
     public SwingGameDisplay() {
         this.chronometer = new SwingChronometer();
@@ -21,6 +22,22 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
         this.setLayout(new BorderLayout());
         this.add(BorderLayout.NORTH, createToolbar());
         this.add(BorderLayout.CENTER, (Component) (this.boardDisplay = createBoardDisplay()));
+        this.add(BorderLayout.SOUTH, createReplayToolbar());
+    }
+
+    private JPanel createReplayToolbar() {
+        replayToolbar = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton button = new JButton("⊟");
+        button.setEnabled(false);
+        replayToolbar.add(button);
+        JSlider slider = createSlider();
+        slider.setEnabled(false);
+        replayToolbar.add(slider);
+        return replayToolbar;
+    }
+
+    private JSlider createSlider() {
+        return new JSlider(JSlider.HORIZONTAL, 0, 0);
     }
 
     private SwingBoardDisplay createBoardDisplay() {

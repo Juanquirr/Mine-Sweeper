@@ -4,7 +4,7 @@ import software.ulpgc.minesweeper.apps.windows.view.customization.CustomFont;
 import software.ulpgc.minesweeper.architecture.control.Command;
 import software.ulpgc.minesweeper.architecture.model.Level;
 import software.ulpgc.minesweeper.architecture.view.GameDisplay;
-import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
+import software.ulpgc.minesweeper.architecture.view.MenuDisplay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainFrame extends JFrame {
-    private final SwingMainMenuPanel mainMenuPanel;
+    private final SwingMenuDisplay mainMenuPanel;
     private final SwingGameDisplay gameplayPanel;
     private final Map<String, Command> commands;
 
@@ -57,8 +57,8 @@ public class MainFrame extends JFrame {
     }
 
 
-    private SwingMainMenuPanel createMainMenuPanel() {
-        SwingMainMenuPanel loadingPanel = new SwingMainMenuPanel();
+    private SwingMenuDisplay createMainMenuPanel() {
+        SwingMenuDisplay loadingPanel = new SwingMenuDisplay();
         loadingPanel.startButton().addActionListener(x -> {
             commands.get("start_game").execute();
             ((CardLayout) getContentPane().getLayout()).show(getContentPane(), "GAME");
@@ -71,7 +71,7 @@ public class MainFrame extends JFrame {
         return loadingPanel;
     }
 
-    public MainMenuPanel mainMenuPanel() {
+    public MenuDisplay mainMenuPanel() {
         return mainMenuPanel;
     }
 

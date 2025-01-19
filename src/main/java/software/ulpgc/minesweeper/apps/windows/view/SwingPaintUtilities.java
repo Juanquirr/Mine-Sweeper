@@ -19,30 +19,25 @@ public class SwingPaintUtilities {
 
     public static void drawFlag(Graphics g, Cell.Position position, int size) {
         Graphics2D g2d = (Graphics2D) g;
-        int cellX = position.x(); // Coordenada x de la celda
-        int cellY = position.y(); // Coordenada y de la celda
+        int cellX = position.x();
+        int cellY = position.y();
 
-        // Tamaño de la bandera
-        int flagWidth = 20;  // Ancho de la tela de la bandera
-        int flagHeight = 13; // Altura total de la bandera (incluyendo el mástil)
+        int flagWidth = 20;
+        int flagHeight = 13;
 
-        // Coordenadas para centrar la bandera dentro de la celda
-        int flagX = cellX + (size - flagWidth) / 2; // Centrado horizontalmente
-        int flagY = cellY + (size - flagHeight) / 2; // Centrado verticalmente
+        int flagX = cellX + (size - flagWidth) / 2;
+        int flagY = cellY + (size - flagHeight) / 2;
 
-        // Dibujar el mástil (rectángulo delgado)
-        int mastWidth = 3;  // Ancho del mástil
-        int mastHeight = 20; // Altura del mástil (igual al flagHeight)
+        int mastWidth = 3;
+        int mastHeight = 20;
         g2d.setColor(Color.White.getColor());
         g2d.fillRect(flagX, flagY, mastWidth, mastHeight);
 
-        // Dibujar la tela de la bandera (triángulo)
         g2d.setColor(Color.MineCell.getColor());
         int[] xPoints = {flagX + mastWidth, flagX + mastWidth + flagWidth, flagX + mastWidth};
         int[] yPoints = {flagY, flagY + flagHeight / 2, flagY + flagHeight};
         g2d.fillPolygon(xPoints, yPoints, 3);
 
-        // Dibujar la base del mástil (un rectángulo más ancho)
         int baseWidth = mastWidth + 4;
         int baseHeight = 5;
         g2d.setColor(Color.White.getColor());
