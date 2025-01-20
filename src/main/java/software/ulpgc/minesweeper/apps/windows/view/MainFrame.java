@@ -16,6 +16,7 @@ public class MainFrame extends JFrame {
     private final SwingGameDisplay gameplayPanel;
     private final Map<String, Command> commands;
     private final JPanel centerPanel;
+    private final JPanel toolbar;
 
     private MainFrame() throws HeadlessException {
         this.commands = new HashMap<>();
@@ -24,8 +25,9 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setTitle("Minesweeper");
         setResizable(false);
-        add(BorderLayout.NORTH, createToolbar());
+        add(BorderLayout.NORTH, this.toolbar = createToolbar());
         add(BorderLayout.CENTER, this.centerPanel = centerPanel(this.gameplayPanel = createGameplayPanel(), this.mainMenuPanel = createMainMenuPanel()));
+        toolbar.setVisible(false);
         pack();
     }
 
@@ -49,6 +51,7 @@ public class MainFrame extends JFrame {
             gameplayPanel.boardDisplay().adjustDimensionTo(new Level.Size(1, 1));
             gameplayPanel.setVisible(false);
             ((CardLayout) centerPanel.getLayout()).show(centerPanel, "LOADING");
+            toolbar.setVisible(false);
             setLocationRelativeTo(null);
             pack();
         });
@@ -72,12 +75,12 @@ public class MainFrame extends JFrame {
         return swingGameplayPanel;
     }
 
-
     private SwingMenuDisplay createMainMenuPanel() {
         SwingMenuDisplay loadingPanel = new SwingMenuDisplay();
         loadingPanel.startButton().addActionListener(x -> {
             commands.get("start_game").execute();
             ((CardLayout) centerPanel.getLayout()).show(centerPanel, "GAME");
+            toolbar.setVisible(true);
             setLocationRelativeTo(null);
             pack();
         });

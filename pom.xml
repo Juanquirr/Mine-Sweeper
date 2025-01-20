@@ -6,7 +6,7 @@
 
     <groupId>software.ulpgc</groupId>
     <artifactId>Minesweeper</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -15,7 +15,7 @@
     </properties>
 
     <build>
-        <finalName>example</finalName>
+        <finalName>minesweeper</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -62,6 +62,8 @@
                         <argument>software.ulpgc.minesweeper.apps.windows.Main</argument>
                         <argument>--type</argument>
                         <argument>app-image</argument>
+                        <argument>--icon</argument>
+                        <argument>src/main/resources/icons/landmine.ico</argument>
                     </arguments>
                 </configuration>
             </plugin>
