@@ -20,15 +20,15 @@ public class MainFrame extends JFrame {
 
     private MainFrame() throws HeadlessException {
         this.commands = new HashMap<>();
-        getContentPane().setLayout(new BorderLayout());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         setTitle("Minesweeper");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
+        getContentPane().setLayout(new BorderLayout());
         add(BorderLayout.NORTH, this.toolbar = createToolbar());
         add(BorderLayout.CENTER, this.centerPanel = centerPanel(this.gameplayPanel = createGameplayPanel(), this.mainMenuPanel = createMainMenuPanel()));
         toolbar.setVisible(false);
         pack();
+        setLocationRelativeTo(null);
     }
 
     private JPanel centerPanel(GameDisplay gameDisplay, MenuDisplay menuDisplay) {
@@ -44,7 +44,7 @@ public class MainFrame extends JFrame {
 
     private JPanel createToolbar() {
         JPanel panel = new JPanel();
-        JButton button = new JButton("Return");
+        JButton button = new JButton("Back");
         panel.add(button);
         button.addActionListener(x -> {
             commands.get("finish").execute();
@@ -52,8 +52,8 @@ public class MainFrame extends JFrame {
             gameplayPanel.setVisible(false);
             ((CardLayout) centerPanel.getLayout()).show(centerPanel, "LOADING");
             toolbar.setVisible(false);
-            setLocationRelativeTo(null);
             pack();
+            setLocationRelativeTo(null);
         });
         return panel;
     }
@@ -81,8 +81,8 @@ public class MainFrame extends JFrame {
             commands.get("start_game").execute();
             ((CardLayout) centerPanel.getLayout()).show(centerPanel, "GAME");
             toolbar.setVisible(true);
-            setLocationRelativeTo(null);
             pack();
+            setLocationRelativeTo(null);
         });
         loadingPanel.startButton().setForeground(Color.white);
         loadingPanel.startButton().setFont(new CustomFont().loadFont().deriveFont(25f));

@@ -45,7 +45,7 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
     }
 
     private JButton creteFinalizeButton() {
-        return new JButton("Return");
+        return new JButton("Back");
     }
 
     @Override
