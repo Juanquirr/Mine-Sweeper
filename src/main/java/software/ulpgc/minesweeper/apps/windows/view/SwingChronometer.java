@@ -36,6 +36,7 @@ public class SwingChronometer extends JPanel implements Chronometer {
 
     @Override
     public void reset() {
+        this.counter.set(0);
         this.label.setText("000");
     }
 
