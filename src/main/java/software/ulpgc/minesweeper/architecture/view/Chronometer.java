@@ -5,5 +5,7 @@ public interface Chronometer {
 
     void stop();
 
+    void reset();
+
     long currentTime();
 }

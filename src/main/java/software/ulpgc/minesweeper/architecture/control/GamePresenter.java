@@ -11,12 +11,58 @@ import static software.ulpgc.minesweeper.architecture.view.BoardDisplay.CELL_SIZ
 
 public class GamePresenter {
     private Game game;
+    private GameReplayer gameReplayer;
     private final GameDisplay gameDisplay;
+    private final Object lock = new Object();
+    private Thread replayThread;
+    private volatile boolean running = false;
 
-
-    public GamePresenter(GameDisplay gameDisplay) {
+    public GamePresenter(GameDisplay gameDisplay, GameReplayer gameReplayer) {
         this.gameDisplay = gameDisplay;
+        this.gameReplayer = gameReplayer;
         this.gameDisplay.boardDisplay().on(click());
+    }
+
+    public void showGameReplay() {
+        synchronized (lock) {
+            if (gameReplayer.replayState().equals(GameReplayer.ReplayState.STARTED)) return;
+            gameReplayer = gameReplayer.defineGame(game);
+            running = true;
+        }
+
+        replayThread = new Thread(() -> {
+            for (int i = 0; i < game.interactions().size(); i++) {
+                synchronized (lock) {
+                    if (!running) break;
+                    gameReplayer = gameReplayer.execute();
+                }
+
+                gameDisplay.boardDisplay().paint(PaintOrderBuilder.boardPaintOrder(gameReplayer.game().board(), CELL_SIZE).toArray(BoardDisplay.PaintOrder[]::new));
+            }
+
+            synchronized (lock) {
+                gameReplayer = gameReplayer.reset();
+            }
+        });
+        replayThread.start();
+    }
+
+    public void stopReplay() {
+        synchronized (lock) {
+            running = false;
+        }
+
+        if (replayThread != null) {
+            try {
+                replayThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        synchronized (lock) {
+            gameReplayer = new GameReplayer.Builder().build();
+        }
     }
 
     public void show(Game game) {
@@ -30,15 +76,16 @@ public class GamePresenter {
     private BoardDisplay.Click click() {
         return (xOffset, yOffset, button) -> {
             if (endedGame()) return;
+            if (getAction(button) == null) return;
             Cell.Position position = new Cell.Position(PositionAdapter.adaptToInteger(xOffset, CELL_SIZE), PositionAdapter.adaptToInteger(yOffset, CELL_SIZE));
             game = game.add(new Game.Interaction(position, getAction(button), gameDisplay.chronometer().currentTime()));
             gameDisplay.boardDisplay().paint(getPaintOrderArrayFrom(position));
             gameDisplay.counterDisplay().show(BoardExplorer.countRemainMines(game.board()));
-            checkGameState();
+            checkGameState(game);
         };
     }
 
-    private void checkGameState() {
+    private void checkGameState(Game game) {
         if (!game.gameState().equals(Game.GameState.BEGUN)) gameDisplay.stopGame();
         switch (game.gameState()) {
             case WON -> gameDisplay.showWinDisplay();

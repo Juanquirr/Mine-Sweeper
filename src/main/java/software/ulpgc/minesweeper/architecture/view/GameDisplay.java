@@ -16,4 +16,6 @@ public interface GameDisplay {
     Chronometer chronometer();
 
     CounterDisplay counterDisplay();
+
+    ReplayController replayController();
 }

@@ -11,10 +11,6 @@ public class Board {
     private final List<Cell> cells;
     private final Set<Cell.Position> mines;
 
-    public Board(Level level) {
-        this(level, new ArrayList<>(), new HashSet<>());
-    }
-
     public Board(Level level, List<Cell> cells, Set<Cell.Position> mines) {
         this.level = level;
         this.cells = !cells.isEmpty() ? cells : initializeCells();

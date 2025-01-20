@@ -1,38 +1,38 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
-import software.ulpgc.minesweeper.architecture.view.BoardDisplay;
-import software.ulpgc.minesweeper.architecture.view.Chronometer;
-import software.ulpgc.minesweeper.architecture.view.CounterDisplay;
-import software.ulpgc.minesweeper.architecture.view.GameDisplay;
+import software.ulpgc.minesweeper.architecture.view.*;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SwingGameDisplay extends JPanel implements GameDisplay {
-    private final Chronometer chronometer;
     private final BoardDisplay boardDisplay;
     private final CounterDisplay counterDisplay;
-    private JButton finalizeButton;
-    private JButton restartButton;
+    private final ReplayController replayController;
+    private final Chronometer chronometer;
+    private final JButton finalizeButton;
+    private final JButton restartButton;
 
     public SwingGameDisplay() {
-        this.chronometer = new SwingChronometer();
-        this.counterDisplay = createCounterDisplay();
         this.setLayout(new BorderLayout());
-        this.add(BorderLayout.NORTH, createToolbar());
+        this.add(BorderLayout.NORTH, createToolbar(this.counterDisplay = createCounterDisplay(), this.restartButton = createRestartButton(), this.chronometer = new SwingChronometer(), this.finalizeButton = creteFinalizeButton()));
         this.add(BorderLayout.CENTER, (Component) (this.boardDisplay = createBoardDisplay()));
+        this.add(BorderLayout.SOUTH, (Component) (this.replayController = createReplayToolbar()));
+    }
+
+    private SwingReplayController createReplayToolbar() {
+        return new SwingReplayController();
     }
 
     private SwingBoardDisplay createBoardDisplay() {
         return new SwingBoardDisplay();
     }
 
-    private JPanel createToolbar() {
+    private JPanel createToolbar(CounterDisplay counterDisplay, JButton restartButton, Chronometer chronometer, JButton finalizeButton) {
         JPanel panel = new JPanel();
-        panel.add((Component) counterDisplay);
-        panel.add(createRestartButton());
+        panel.add((Component)counterDisplay);
+        panel.add(restartButton);
         panel.add((Component) chronometer);
-        panel.add(creteFinalizeButton());
         return panel;
     }
 
@@ -41,13 +41,11 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
     }
 
     private JButton createRestartButton() {
-        this.restartButton = new JButton("🙂");
-        return restartButton;
+        return new JButton("🙂");
     }
 
     private JButton creteFinalizeButton() {
-        this.finalizeButton = new JButton("Return");
-        return finalizeButton;
+        return new JButton("Return");
     }
 
     @Override
@@ -64,18 +62,25 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
     @Override
     public void resetGame() {
         this.restartButton.setText("🙂");
+        this.chronometer.reset();
+        this.replayController.disableController();
+    }
+
+    private void enableReplayControlsFor(String emoji, String message) {
+        this.restartButton.setText(emoji);
+        JOptionPane.showMessageDialog(null, message);
+        replayController.enableController();
+
     }
 
     @Override
     public void showWinDisplay() {
-        this.restartButton.setText("😎");
-        JOptionPane.showMessageDialog(null, "YOU WON! :-D");
+        enableReplayControlsFor("😎", "YOU WON! :-D");
     }
 
     @Override
     public void showLostDisplay() {
-        this.restartButton.setText("🙁");
-        JOptionPane.showMessageDialog(null, "TRY HARDER! (╯°□°）╯︵ ┻━┻");
+        enableReplayControlsFor("🙁", "TRY HARDER! (╯°□°）╯︵ ┻━┻");
     }
 
     @Override
@@ -91,6 +96,11 @@ public class SwingGameDisplay extends JPanel implements GameDisplay {
     @Override
     public CounterDisplay counterDisplay() {
         return counterDisplay;
+    }
+
+    @Override
+    public ReplayController replayController() {
+        return replayController;
     }
 
     public JButton finalizeButton() {

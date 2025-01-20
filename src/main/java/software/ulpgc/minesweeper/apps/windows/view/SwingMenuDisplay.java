@@ -1,17 +1,17 @@
 package software.ulpgc.minesweeper.apps.windows.view;
 
 import software.ulpgc.minesweeper.apps.windows.view.customization.CustomFont;
-import software.ulpgc.minesweeper.architecture.view.MainMenuPanel;
+import software.ulpgc.minesweeper.architecture.view.MenuDisplay;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SwingMainMenuPanel extends JPanel implements MainMenuPanel {
+public class SwingMenuDisplay extends JPanel implements MenuDisplay {
 
     private final JButton startButton;
     private final SwingLevelDialog difficultyDialog;
 
-    public SwingMainMenuPanel() {
+    public SwingMenuDisplay() {
         setLayout(new BorderLayout());
         add(BorderLayout.NORTH, createTitleDisplay());
         add(BorderLayout.CENTER, createCenterPanel(this.difficultyDialog = createDifficultyDialog()));
