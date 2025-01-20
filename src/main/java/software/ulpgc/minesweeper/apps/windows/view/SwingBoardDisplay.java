@@ -23,6 +23,10 @@ public class SwingBoardDisplay extends JPanel implements BoardDisplay {
         this.colors.put(2, Color.TWO);
         this.colors.put(3, Color.THREE);
         this.colors.put(4, Color.FOUR);
+        this.colors.put(5, Color.FIVE);
+        this.colors.put(6, Color.SIX);
+        this.colors.put(7, Color.SEVEN);
+        this.colors.put(8, Color.EIGHT);
         this.colors.put(null, Color.ONE);
         setLayout(new BorderLayout());
         this.orders = new ArrayList<>();
