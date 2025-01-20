@@ -4,9 +4,7 @@ import software.ulpgc.minesweeper.architecture.model.Board;
 import software.ulpgc.minesweeper.architecture.model.Cell;
 import software.ulpgc.minesweeper.architecture.model.Level;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class BoardBuilder implements Builder<Board> {
     private Level level;
@@ -14,6 +12,8 @@ public class BoardBuilder implements Builder<Board> {
     private Set<Cell.Position> mines;
 
     private BoardBuilder() {
+        this.cells = new ArrayList<>();
+        this.mines = new HashSet<>();
     }
 
     public static BoardBuilder create() {
@@ -37,6 +37,6 @@ public class BoardBuilder implements Builder<Board> {
 
     @Override
     public Board build() {
-        return Objects.isNull(cells) ? new Board(level) : new Board(level, cells, mines);
+        return new Board(level, cells, mines);
     }
 }

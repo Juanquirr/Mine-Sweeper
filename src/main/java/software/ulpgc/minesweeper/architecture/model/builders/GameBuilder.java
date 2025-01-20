@@ -14,6 +14,7 @@ public class GameBuilder implements Builder<Game> {
 
     private GameBuilder() {
         this.interactions = new ArrayList<>();
+        this.gameState = Game.GameState.UNBEGUN;
     }
 
     public static GameBuilder create() {
